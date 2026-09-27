@@ -25,11 +25,11 @@ Hermes truncates skill descriptions to 60 chars in the system prompt, so similar
 ## Install (rollout to another Hermes agent)
 
 ```bash
-git clone https://github.com/jessicasetyani/hermes-plugin-jev-suggest.git
-cp -r hermes-plugin-jev-suggest ~/.hermes/plugins/jev-suggest
-hermes plugins enable jev-suggest
-# takes effect on next session (/reset)
+hermes plugins install jessicasetyani/hermes-plugin-jev-suggest --enable
+# takes effect on next session (/reset); restart gateway if running via gateway
 ```
+
+Updates: `hermes plugins update jev-suggest` (or `check-updates` to poll).
 
 ## Configuration (env, all optional)
 
