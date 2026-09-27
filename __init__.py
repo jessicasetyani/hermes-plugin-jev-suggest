@@ -44,6 +44,26 @@ _TRUTHY = {"1", "true", "yes", "on"}
 _ROSTER_CACHE: list[dict] | None = None
 _ROSTER_MTIME: float = 0.0
 
+# Per-run observability (read by on_pre_llm_call after suggest_skill returns).
+_LAST_INFO: dict = {}
+_RUN: dict = {"cost": 0.0}
+
+
+def _events_path() -> Path:
+    return _hermes_home() / "plugins" / "jev-suggest" / "events.jsonl"
+
+
+def _log_event(ev: dict) -> None:
+    """Append one structured event. Never logs user text (PII-safe)."""
+    try:
+        p = _events_path()
+        if p.exists() and p.stat().st_size > 5 * 1024 * 1024:
+            return  # stop growing; rotate manually
+        with open(p, "a", encoding="utf-8") as f:
+            f.write(json.dumps({"ts": time.time(), **ev}, ensure_ascii=False) + "\n")
+    except Exception:
+        pass
+
 
 def _disabled() -> bool:
     return os.environ.get("JEV_SUGGEST_DISABLE", "").lower() in _TRUTHY
@@ -120,7 +140,12 @@ def _decide(state: str, questions: dict) -> dict | None:
     )
     try:
         with urllib.request.urlopen(req, timeout=TIMEOUT_S) as r:
-            return json.loads(r.read())
+            data = json.loads(r.read())
+        try:
+            _RUN["cost"] += float(((data.get("usage") or {}).get("cost")) or 0.0)
+        except (TypeError, ValueError):
+            pass
+        return data
     except Exception as exc:  # fail-open
         logger.warning("jev-suggest: decisions call failed: %s", type(exc).__name__)
         return None
@@ -137,6 +162,8 @@ def _is_trivial(text: str) -> bool:
 def suggest_skill(user_text: str) -> str:
     """Return a skill name or '' (suggest nothing). Never raises."""
     try:
+        _LAST_INFO.clear()
+        _RUN["cost"] = 0.0
         if _disabled() or _is_trivial(user_text):
             return ""
         roster = _load_roster()
@@ -192,6 +219,7 @@ def suggest_skill(user_text: str) -> str:
             if sel:
                 ranked = [(sel, 1.0)]
         logger.info("jev-suggest: call1 gate=%.2f top=%s", gate, [n for n, _ in ranked])
+        _LAST_INFO.update({"gate": round(gate, 3), "top": [n for n, _ in ranked]})
         if gate < GATE_THRESHOLD or not ranked:
             return ""
 
@@ -229,6 +257,7 @@ def suggest_skill(user_text: str) -> str:
             return ""
         fit = float(answers2.get(f"fits_{best}", {}).get("noul", 0.0))
         logger.info("jev-suggest: call2 best=%s fit=%.2f", best, fit)
+        _LAST_INFO.update({"best": best, "fit": round(fit, 3)})
         if fit < FITS_THRESHOLD:
             return ""
         return best
@@ -250,6 +279,18 @@ def on_pre_llm_call(**kwargs) -> dict:
         winner = suggest_skill(text)
         dt = time.time() - t0
         logger.info("jev-suggest: turn done in %.2fs winner=%s", dt, winner or "-")
+        _log_event({
+            "event": "suggest",
+            "session_id": str(kwargs.get("session_id") or ""),
+            "turn_id": str(kwargs.get("turn_id") or ""),
+            "winner": winner or None,
+            "gate": _LAST_INFO.get("gate"),
+            "top": _LAST_INFO.get("top"),
+            "fit": _LAST_INFO.get("fit"),
+            "latency_s": round(dt, 2),
+            "cost": round(_RUN["cost"], 8),
+            "state_chars": len(text),
+        })
         if not winner:
             return {}
         return {"context": (
@@ -263,5 +304,29 @@ def on_pre_llm_call(**kwargs) -> dict:
         return {}
 
 
+def on_post_tool_call(**kwargs) -> None:
+    """Record every skill_view load so suggestions can be matched to outcomes."""
+    try:
+        if _disabled():
+            return
+        tool_name = str(kwargs.get("tool_name") or "")
+        if not tool_name.startswith("skill"):
+            return
+        args = kwargs.get("args") or {}
+        name = args.get("name") if isinstance(args, dict) else None
+        if not name:
+            return
+        _log_event({
+            "event": "skill_tool",
+            "session_id": str(kwargs.get("session_id") or ""),
+            "turn_id": str(kwargs.get("turn_id") or ""),
+            "tool": tool_name,
+            "skill": str(name),
+        })
+    except Exception:
+        pass
+
+
 def register(ctx) -> None:
     ctx.register_hook("pre_llm_call", on_pre_llm_call)
+    ctx.register_hook("post_tool_call", on_post_tool_call)
