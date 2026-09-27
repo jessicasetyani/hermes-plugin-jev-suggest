@@ -1,0 +1,6 @@
+name: jev-suggest
+version: "0.1.0"
+description: "Automatic skill suggestion via Jev decision model (pre_llm_call). Skims the skill roster cheaply, verifies top-3 in detail, injects at most one advisory <skill_relevance> line. Fail-open with JEV_SUGGEST_DISABLE=1 kill switch."
+author: "Ali Naga Saputra / Hermes Agent"
+provides_hooks:
+  - pre_llm_call
