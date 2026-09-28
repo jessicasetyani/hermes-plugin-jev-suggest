@@ -1,7 +1,72 @@
 name: jev-suggest
-version: "0.1.0"
-description: "Automatic skill suggestion via Jev decision model (pre_llm_call). Skims the skill roster cheaply, verifies top-3 in detail, injects at most one advisory <skill_relevance> line. Fail-open with JEV_SUGGEST_DISABLE=1 kill switch."
+version: "0.2.0"
+description: "Automatic skill suggestion via decision model on OpenRouter (pre_llm_call). Skims the skill roster cheaply, verifies top-3 in detail, injects at most one advisory <skill_relevance> line. OpenRouter-only; model selectable via config. Fail-open; kill switch is mode: off."
 author: "Ali Naga Saputra / Hermes Agent"
 provides_hooks:
   - pre_llm_call
   - post_tool_call
+config_schema:
+  mode:
+    type: str
+    default: "off"
+    description: "off | auto (suggest when OPENROUTER_API_KEY is present) | on"
+  gate:
+    type: float
+    default: 0.30
+    description: "Call-1 gate score; below it nothing is suggested"
+  fits:
+    type: float
+    default: 0.30
+    description: "Winner's own 'does it fit' judgment; below it nothing is suggested"
+  shortlist:
+    type: int
+    default: 3
+    description: "Candidates carried from Call 1 into Call 2"
+  excerpt:
+    type: int
+    default: 700
+    description: "SKILL.md characters each shortlisted candidate brings"
+  timeout_s:
+    type: float
+    default: 4.0
+    description: "Seconds per Decisions API call (hook budget; router parity)"
+  suggest_chars:
+    type: int
+    default: 4000
+    description: "Longer user messages are left alone"
+  max_skills:
+    type: int
+    default: 300
+    description: "Max skills indexed from the roster"
+  chunk:
+    type: int
+    default: 240
+    description: "Skills per Choice question (API caps one Choice at 255 options)"
+  retry_max_wait_s:
+    type: float
+    default: 2.0
+    description: "On 429/529, retry once only if Retry-After waits at most this long"
+  breaker_threshold:
+    type: int
+    default: 3
+    description: "Consecutive 429/529s before going silent"
+  breaker_cooldown_s:
+    type: float
+    default: 120
+    description: "Silence window after the breaker opens"
+  min_interval_s:
+    type: float
+    default: 0.25
+    description: "Minimum gap between outgoing calls, per process"
+  cache_seconds:
+    type: int
+    default: 300
+    description: "Identical calls answered from cache per window"
+  openrouter_model:
+    type: str
+    default: "~typesafe/jev-latest"
+    description: "OpenRouter Decisions API model: upstage/solar-decide | ~typesafe/jev-latest | typesafe/jev-1.13"
+  openrouter_base_url:
+    type: str
+    default: "https://openrouter.ai/api/alpha"
+    description: "OpenRouter Decisions API base URL (locked to OpenRouter; no other backend)"
