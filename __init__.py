@@ -18,7 +18,7 @@ Design notes (ported from jev-skill-router's config pattern, OpenRouter-only):
   Anything else falls back to the default (logged, fail-open).
 - Roster is never modified, system prompt stays byte-stable (prefix caching safe).
 - Fail-open: any error/timeout/missing key returns "" so the turn proceeds.
-- Kill switch: `mode: off` (config) atau `hermes plugins disable jev-suggest`.
+- Kill switch: `mode: off` (config) or `hermes plugins disable jev-suggest`.
 - No PII in logs: only lengths, names and scores are logged, never message text.
 - Stdlib only (urllib), no extra dependencies.
 """
