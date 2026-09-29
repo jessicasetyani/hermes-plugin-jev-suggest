@@ -33,7 +33,7 @@ this plugin is **locked to the OpenRouter Decisions API** — only
 |---|---|
 | `typesafe/jev-1.13` | **Recommended for production.** Pinned: reproducible, thresholds stay valid until you bump it. |
 | `~typesafe/jev-latest` | Plugin default. Alias = always the newest Jev; calibration can drift on every vendor release. |
-| `upstage/solar-decide` | Newcomer (Solar Mini 4). Full `noul`/`choice`/`score` like Jev, returns `confidence`. ~$0.05/M input. **Limit: max 26 options per `choice`** (HTTP 422 above that, verified 28 Sep 2026) — a 148-skill roster needs chunk 26 = 6 calls/turn, so it is NOT recommended as the router model; the plugin auto-clamps chunk and logs a warning. |
+| `upstage/solar-decide` | Newcomer (Solar Mini 4). Full `noul`/`choice`/`score` like Jev, returns `confidence`. ~$0.05/M input. **Not interchangeable with Jev** — see [probe report](docs/calibration/SOLAR-PROBE-REPORT.md): 26-label cap incl. `none_of_these` (→ chunk 25), gate scores ~2.4x lower (use `gate: 0.10`, not 0.30), and ~9 calls / 7–10 s / $0.0047 per turn on a 184-skill roster. Sensible only for rosters ≤25 or as a hybrid verify stage. |
 
 Any other slug falls back to the default (logged, fail-open).
 

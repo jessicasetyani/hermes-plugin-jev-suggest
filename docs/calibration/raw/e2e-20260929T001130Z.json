@@ -1,0 +1,90 @@
+{
+  "ts": "2026-09-29T00:11:12.260948+00:00",
+  "roster_pool": 184,
+  "rows": [
+    {
+      "mode": "jev-1.13 (production config)",
+      "model": "typesafe/jev-1.13",
+      "winner": "ssl-cert-inspection",
+      "wall_s": 0.74,
+      "info": {
+        "gate": 0.672,
+        "chunks": 1,
+        "top": [
+          "ssl-cert-inspection",
+          "event-spatial-layout",
+          "web-search-tier"
+        ],
+        "best": "ssl-cert-inspection",
+        "fit": 0.46,
+        "probability": 0.95,
+        "confidence": 0.93,
+        "outcome": "suggested",
+        "reason": null
+      },
+      "api_calls": 2,
+      "cost": 0.00043957
+    },
+    {
+      "mode": "solar + jev config copied",
+      "model": "upstage/solar-decide",
+      "winner": "",
+      "wall_s": 7.76,
+      "info": {
+        "gate": 0.531,
+        "chunks": 8,
+        "top": [
+          "ssl-cert-inspection",
+          "hermes-a2a-bridge",
+          "hermes-internals-investigation"
+        ],
+        "outcome": "silent",
+        "reason": "none_selected"
+      },
+      "api_calls": 9,
+      "cost": 0.004775
+    },
+    {
+      "mode": "solar tuned (gate 0.10)",
+      "model": "upstage/solar-decide",
+      "winner": "",
+      "wall_s": 8.2,
+      "info": {
+        "gate": 0.56,
+        "chunks": 8,
+        "top": [
+          "ssl-cert-inspection",
+          "hermes-a2a-bridge",
+          "hermes-internals-investigation"
+        ],
+        "outcome": "silent",
+        "reason": "none_selected"
+      },
+      "api_calls": 9,
+      "cost": 0.00470745
+    },
+    {
+      "mode": "hybrid jev-skim + solar-verify",
+      "model": "typesafe/jev-1.13",
+      "winner": "ssl-cert-inspection",
+      "wall_s": 1.28,
+      "info": {
+        "gate": 0.674,
+        "chunks": 1,
+        "top": [
+          "ssl-cert-inspection",
+          "plan",
+          "cloud-hosting-verification"
+        ],
+        "best": "ssl-cert-inspection",
+        "fit": 0.824,
+        "probability": 0.836,
+        "confidence": 0.629661,
+        "outcome": "suggested",
+        "reason": null
+      },
+      "api_calls": 2,
+      "cost": 0.00049887
+    }
+  ]
+}

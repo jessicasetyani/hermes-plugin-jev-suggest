@@ -62,6 +62,13 @@ models (logged warning) + `SOLAR_MAX_CHOICES` constant + offline test.
 Decision: production model = `typesafe/jev-1.13` (pinned); Solar stays in
 the allowlist for rerank-only or post-limit-lift use.
 
+**Superseded 2026-09-29 by the full probe** — see
+[`SOLAR-PROBE-REPORT.md`](SOLAR-PROBE-REPORT.md): the cap is 26 labels *in total*
+(`none_of_these` included → usable chunk **25**, now the shipped clamp), Solar's
+gate scale runs ~2.4x below Jev's (work median 0.44 vs 0.70 → needs gate 0.05–0.10),
+`score` caps at 2–10 levels on both vendors, and on the real 184-skill roster Solar
+costs ~9 calls / 7–10 s / $0.0047 per turn versus Jev's 2 / 0.74 s / $0.00044.
+
 ## Upstream latency variance (28 Sep 2026, observed live)
 
 Identical 29KB Call-1 payloads on `typesafe/jev-1.13` returned in

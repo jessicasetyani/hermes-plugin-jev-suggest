@@ -50,12 +50,13 @@ ALLOWED_MODELS = frozenset({
 })
 DEFAULT_MODEL = "~typesafe/jev-latest"
 DEFAULT_BASE_URL = "https://openrouter.ai/api/alpha"
-# Solar Decide route caps one Choice at 26 options (HTTP 422 beyond that,
-# verified live 2026-09-28). Clamp so Solar stays correct on big rosters
-# instead of failing every Call-1; note this multiplies Call-1 round trips
-# (148 skills = 6 chunks), so prefer a pinned Jev model for wide rosters.
+# Solar Decide route caps one Choice at 26 labels TOTAL, and a chunked roster
+# spends one label on `none_of_these` — so the usable chunk is 25. Verified
+# live 2026-09-29: 26 options OK, 26 + none_of_these = 422, 27 = 422.
+# Same probe: score is capped at 2-10 levels on BOTH vendors (Solar 422,
+# Jev 400 "at most 10 levels"), so score cannot replace choice for a roster.
 SOLAR_MODELS = frozenset({"upstage/solar-decide"})
-SOLAR_MAX_CHOICES = 26
+SOLAR_MAX_CHOICES = 25
 DEFAULT_CHUNK = 240
 MAX_CHOICES = 255  # the API refuses a Choice with more options
 NONE_OPTION = "none_of_these"
@@ -506,9 +507,14 @@ def suggest_skill(user_text: str, settings: dict | None = None) -> str:
             chunk = DEFAULT_CHUNK
         model_now = _resolve_model(str(st.get("openrouter_model", DEFAULT_MODEL)))
         if model_now in SOLAR_MODELS and chunk > SOLAR_MAX_CHOICES:
-            logger.warning("jev-suggest: %s caps Choice at %d options; clamping chunk %d",
-                           model_now, SOLAR_MAX_CHOICES, chunk)
+            logger.warning("jev-suggest: %s caps Choice at 26 labels incl. none_of_these; "
+                           "clamping chunk %d -> %d", model_now, chunk, SOLAR_MAX_CHOICES)
             chunk = SOLAR_MAX_CHOICES
+        if not WARN_SOLAR_GATE_ONCE["done"]:
+            _warn = _solar_config_warning(model_now, st)
+            if _warn:
+                WARN_SOLAR_GATE_ONCE["done"] = True
+                logger.warning("jev-suggest: %s", _warn)
         reason = _skip_reason(user_text, suggest_chars)
         if reason:
             _LAST_INFO.update({"outcome": OUTCOME_SILENT, "reason": reason})
@@ -816,6 +822,26 @@ def setup_cli(subparser: argparse.ArgumentParser) -> None:
     subs.add_parser("check", help="Verify key, roster and log writability (no inference spent)")
 
 
+WARN_SOLAR_GATE_ONCE = {"done": False}
+
+
+def _solar_config_warning(model: str, settings: dict) -> str | None:
+    """Solar cannot inherit Jev's calibration (probe 2026-09-29): its gate scores
+    run ~2.4x lower, so a Jev-tuned gate silences real work turns."""
+    if model not in SOLAR_MODELS:
+        return None
+    try:
+        gate = float(settings.get("gate", 0.30))
+    except (TypeError, ValueError):
+        gate = 0.30
+    if gate > 0.15:
+        return (f"{model} with gate {gate:.2f} looks untuned: Solar's gate scores run "
+                "~2.4x lower than Jev's (work median 0.44 vs 0.70, chit-chat ~0.01). "
+                "Use gate 0.05-0.10; expect ~8s and 9 calls per turn on a 180+ skill "
+                "roster (25 labels/chunk incl. none_of_these).")
+    return None
+
+
 def _cmd_status(ctx, settings: dict) -> int:
     skills = _load_roster(settings)
     key = "present" if _openrouter_key() else "missing"
@@ -834,6 +860,10 @@ def _cmd_status(ctx, settings: dict) -> int:
     print(f"key:           OPENROUTER_API_KEY={key}")
     print(f"allowlist:     {sorted(ALLOWED_MODELS)}")
     print(f"log:           {_events_path()}")
+    warn = _solar_config_warning(
+        _resolve_model(str(settings.get("openrouter_model", DEFAULT_MODEL))), settings)
+    if warn:
+        print(f"WARNING:       {warn}")
     return 0
 
 

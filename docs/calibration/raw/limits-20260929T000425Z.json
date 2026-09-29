@@ -1,0 +1,703 @@
+{
+  "ts": "2026-09-29T00:04:08.170463+00:00",
+  "cases": [
+    {
+      "ok": true,
+      "payload_bytes": 715,
+      "latency_s": 1.17,
+      "answers": {
+        "q": {
+          "type": "choice",
+          "choice": "opt-000",
+          "probabilities": {
+            "opt-000": 0.54969,
+            "opt-001": 0.095522,
+            "opt-002": 0.084298,
+            "opt-003": 0.031011,
+            "opt-004": 0.027367,
+            "opt-005": 0.018809,
+            "opt-006": 0.051129,
+            "opt-007": 0.027367,
+            "opt-008": 0.008885,
+            "opt-009": 0.016599,
+            "opt-010": 0.031011,
+            "opt-011": 0.002819,
+            "opt-012": 0.007841,
+            "opt-013": 0.012927,
+            "opt-014": 0.00035,
+            "opt-015": 0.00692,
+            "opt-016": 0.002319,
+            "opt-017": 0.000633,
+            "opt-018": 0.001326,
+            "opt-019": 0.004197,
+            "opt-020": 0.002515,
+            "opt-021": 0.00063,
+            "opt-022": 0.000662,
+            "opt-023": 0.010068,
+            "opt-024": 0.000907,
+            "opt-025": 0.004197
+          },
+          "confidence": 0.444602
+        }
+      },
+      "usage": {
+        "input_tokens": 6930,
+        "output_tokens": 10,
+        "cost": 0.0003465
+      },
+      "label": "choice 26",
+      "model": "upstage/solar-decide"
+    },
+    {
+      "ok": false,
+      "payload_bytes": 737,
+      "http": 422,
+      "latency_s": 0.51,
+      "detail": "{\"error\":{\"message\":\"HTTP 422: {\\\"error\\\":{\\\"type\\\":\\\"validation_failed\\\",\\\"message\\\":\\\"question q: 27 candidates exceed the 26 single-token labels this route supports\\\"}}\\n\",\"code\":422}}",
+      "label": "choice 27",
+      "model": "upstage/solar-decide"
+    },
+    {
+      "ok": true,
+      "payload_bytes": 712,
+      "latency_s": 0.39,
+      "answers": {
+        "q": {
+          "type": "choice",
+          "choice": "opt-000",
+          "probabilities": {
+            "opt-010": 0.01,
+            "opt-006": 0.01,
+            "opt-014": 0.01,
+            "opt-020": 0.01,
+            "opt-016": 0,
+            "opt-015": 0.01,
+            "opt-022": 0.01,
+            "opt-000": 0.71,
+            "opt-018": 0.01,
+            "opt-005": 0.02,
+            "opt-008": 0.01,
+            "opt-024": 0.01,
+            "opt-019": 0.01,
+            "opt-017": 0.01,
+            "opt-009": 0.01,
+            "opt-001": 0.049999999999999996,
+            "opt-007": 0.01,
+            "opt-021": 0.01,
+            "opt-012": 0.01,
+            "opt-023": 0.01,
+            "opt-002": 0.01,
+            "opt-003": 0.01,
+            "opt-013": 0.01,
+            "opt-025": 0.01,
+            "opt-004": 0.01,
+            "opt-011": 0.01
+          },
+          "confidence": 0.71
+        }
+      },
+      "usage": {
+        "input_tokens": 801,
+        "output_tokens": 307,
+        "cost": 3.3642e-05
+      },
+      "label": "choice 26",
+      "model": "typesafe/jev-1.13"
+    },
+    {
+      "ok": true,
+      "payload_bytes": 5750,
+      "latency_s": 0.38,
+      "answers": {
+        "q": {
+          "type": "choice",
+          "choice": "opt-000",
+          "probabilities": {
+            "opt-103": 0,
+            "opt-070": 0,
+            "opt-042": 0,
+            "opt-165": 0,
+            "opt-090": 0,
+            "opt-190": 0,
+            "opt-128": 0,
+            "opt-247": 0.01,
+            "opt-193": 0,
+            "opt-054": 0,
+            "opt-078": 0,
+            "opt-106": 0,
+            "opt-195": 0,
+            "opt-231": 0.01,
+            "opt-237": 0.01,
+            "opt-051": 0,
+            "opt-175": 0,
+            "opt-047": 0,
+            "opt-249": 0.01,
+            "opt-037": 0,
+            "opt-000": 0.45,
+            "opt-022": 0,
+            "opt-086": 0,
+            "opt-223": 0.01,
+            "opt-074": 0,
+            "opt-141": 0,
+            "opt-010": 0.02,
+            "opt-210": 0.01,
+            "opt-014": 0,
+            "opt-172": 0,
+            "opt-050": 0,
+            "opt-152": 0,
+            "opt-024": 0,
+            "opt-154": 0,
+            "opt-039": 0,
+            "opt-156": 0,
+            "opt-230": 0.01,
+            "opt-096": 0,
+            "opt-181": 0,
+            "opt-076": 0,
+            "opt-135": 0,
+            "opt-143": 0,
+            "opt-228": 0.01,
+            "opt-116": 0,
+            "opt-021": 0,
+            "opt-167": 0,
+            "opt-192": 0,
+            "opt-061": 0,
+            "opt-064": 0,
+            "opt-217": 0.01,
+            "opt-242": 0.01,
+            "opt-220": 0.01,
+            "opt-178": 0,
+            "opt-205": 0,
+            "opt-120": 0,
+            "opt-157": 0,
+            "opt-004": 0,
+            "opt-236": 0.01,
+            "opt-102": 0,
+            "opt-136": 0,
+            "opt-094": 0,
+            "opt-113": 0,
+            "opt-183": 0,
+            "opt-005": 0,
+            "opt-048": 0,
+            "opt-104": 0,
+            "opt-118": 0,
+            "opt-053": 0,
+            "opt-149": 0,
+            "opt-146": 0,
+            "opt-159": 0,
+            "opt-130": 0,
+            "opt-250": 0.01,
+            "opt-003": 0,
+            "opt-174": 0,
+            "opt-060": 0,
+            "opt-148": 0,
+            "opt-125": 0,
+            "opt-211": 0.01,
+            "opt-238": 0.01,
+            "opt-234": 0.01,
+            "opt-184": 0,
+            "opt-059": 0,
+            "opt-163": 0,
+            "opt-233": 0.01,
+            "opt-038": 0,
+            "opt-082": 0,
+            "opt-127": 0,
+            "opt-137": 0,
+            "opt-140": 0,
+            "opt-138": 0,
+            "opt-055": 0,
+            "opt-194": 0,
+            "opt-011": 0,
+            "opt-124": 0,
+            "opt-062": 0,
+            "opt-200": 0,
+            "opt-065": 0,
+            "opt-072": 0,
+            "opt-057": 0,
+            "opt-081": 0,
+            "opt-162": 0,
+            "opt-176": 0,
+            "opt-225": 0.01,
+            "opt-036": 0,
+            "opt-068": 0,
+            "opt-254": 0.01,
+            "opt-161": 0,
+            "opt-015": 0,
+            "opt-151": 0,
+            "opt-028": 0,
+            "opt-244": 0.01,
+            "opt-030": 0,
+            "opt-142": 0,
+            "opt-206": 0,
+            "opt-084": 0,
+            "opt-075": 0,
+            "opt-112": 0,
+            "opt-058": 0,
+            "opt-073": 0,
+            "opt-218": 0.01,
+            "opt-179": 0,
+            "opt-166": 0,
+            "opt-253": 0.01,
+            "opt-041": 0,
+            "opt-197": 0,
+            "opt-049": 0,
+            "opt-213": 0.01,
+            "opt-001": 0.060000000000000005,
+            "opt-224": 0.01,
+            "opt-067": 0,
+            "opt-182": 0,
+            "opt-100": 0.02,
+            "opt-007": 0,
+            "opt-088": 0,
+            "opt-098": 0,
+            "opt-227": 0.01,
+            "opt-029": 0,
+            "opt-016": 0,
+            "opt-203": 0,
+            "opt-215": 0.01,
+            "opt-079": 0,
+            "opt-052": 0,
+            "opt-240": 0.01,
+            "opt-129": 0,
+            "opt-180": 0,
+            "opt-145": 0,
+            "opt-083": 0,
+            "opt-131": 0,
+            "opt-026": 0,
+            "opt-185": 0,
+            "opt-105": 0,
+            "opt-201": 0,
+            "opt-019": 0,
+            "opt-035": 0,
+            "opt-080": 0,
+            "opt-119": 0,
+            "opt-066": 0,
+            "opt-056": 0,
+            "opt-101": 0,
+            "opt-092": 0,
+            "opt-117": 0,
+            "opt-121": 0,
+            "opt-123": 0,
+            "opt-202": 0,
+            "opt-207": 0,
+            "opt-239": 0.01,
+            "opt-126": 0,
+            "opt-110": 0,
+            "opt-204": 0,
+            "opt-171": 0,
+            "opt-139": 0,
+            "opt-186": 0,
+            "opt-087": 0,
+            "opt-158": 0,
+            "opt-209": 0,
+            "opt-173": 0,
+            "opt-095": 0,
+            "opt-160": 0,
+            "opt-168": 0,
+            "opt-150": 0,
+            "opt-111": 0,
+            "opt-191": 0,
+            "opt-097": 0,
+            "opt-069": 0,
+            "opt-214": 0.01,
+            "opt-017": 0,
+            "opt-002": 0,
+            "opt-169": 0,
+            "opt-196": 0,
+            "opt-229": 0.01,
+            "opt-235": 0.01,
+            "opt-063": 0,
+            "opt-077": 0,
+            "opt-109": 0,
+            "opt-040": 0,
+            "opt-012": 0,
+            "opt-221": 0.01,
+            "opt-147": 0,
+            "opt-107": 0,
+            "opt-099": 0,
+            "opt-023": 0,
+            "opt-027": 0,
+            "opt-243": 0.01,
+            "opt-246": 0.01,
+            "opt-245": 0.01,
+            "opt-091": 0,
+            "opt-226": 0.01,
+            "opt-032": 0,
+            "opt-222": 0.01,
+            "opt-208": 0,
+            "opt-071": 0,
+            "opt-114": 0,
+            "opt-164": 0,
+            "opt-219": 0.01,
+            "opt-232": 0.01,
+            "opt-241": 0.01,
+            "opt-177": 0,
+            "opt-122": 0,
+            "opt-153": 0,
+            "opt-134": 0,
+            "opt-085": 0,
+            "opt-187": 0,
+            "opt-252": 0.01,
+            "opt-212": 0.01,
+            "opt-108": 0,
+            "opt-199": 0,
+            "opt-189": 0,
+            "opt-008": 0,
+            "opt-132": 0,
+            "opt-009": 0,
+            "opt-089": 0,
+            "opt-046": 0,
+            "opt-033": 0,
+            "opt-093": 0,
+            "opt-248": 0.01,
+            "opt-188": 0,
+            "opt-115": 0,
+            "opt-018": 0,
+            "opt-170": 0,
+            "opt-144": 0,
+            "opt-133": 0,
+            "opt-155": 0,
+            "opt-031": 0,
+            "opt-034": 0,
+            "opt-216": 0.01,
+            "opt-025": 0,
+            "opt-013": 0,
+            "opt-020": 0,
+            "opt-251": 0.01,
+            "opt-043": 0,
+            "opt-006": 0,
+            "opt-044": 0,
+            "opt-045": 0,
+            "opt-198": 0
+          },
+          "confidence": 0.43
+        }
+      },
+      "usage": {
+        "input_tokens": 5381,
+        "output_tokens": 2826,
+        "cost": 0.000226002
+      },
+      "label": "choice 255",
+      "model": "typesafe/jev-1.13"
+    },
+    {
+      "ok": false,
+      "payload_bytes": 5772,
+      "http": 400,
+      "latency_s": 0.28,
+      "detail": "{\"error\":{\"message\":\"HTTP 400: {\\\"detail\\\":\\\"Too many choices. Must have at most 255 choices.\\\"}\",\"code\":400}}",
+      "label": "choice 256",
+      "model": "typesafe/jev-1.13"
+    },
+    {
+      "ok": true,
+      "payload_bytes": 723,
+      "latency_s": 1.61,
+      "answers": {
+        "q": {
+          "type": "choice",
+          "choice": "none_of_these",
+          "probabilities": {
+            "none_of_these": 0.92982,
+            "opt-000": 0.024779,
+            "opt-001": 0.005529,
+            "opt-002": 0.019298,
+            "opt-003": 0.001398,
+            "opt-004": 0.001795,
+            "opt-005": 0.001398,
+            "opt-006": 0.002612,
+            "opt-007": 0.000748,
+            "opt-008": 0.000315,
+            "opt-009": 0.001089,
+            "opt-010": 0.002305,
+            "opt-011": 7.8e-05,
+            "opt-012": 0.001089,
+            "opt-013": 0.001234,
+            "opt-014": 7.9e-05,
+            "opt-015": 0.000348,
+            "opt-016": 0.000272,
+            "opt-017": 0.000313,
+            "opt-018": 0.000401,
+            "opt-019": 0.000356,
+            "opt-020": 0.000236,
+            "opt-021": 0.000167,
+            "opt-022": 0.000514,
+            "opt-023": 0.002034,
+            "opt-024": 0.001795
+          },
+          "confidence": 0.876999
+        }
+      },
+      "usage": {
+        "input_tokens": 6890,
+        "output_tokens": 10,
+        "cost": 0.0003445
+      },
+      "label": "choice 25 + none_of_these",
+      "model": "upstage/solar-decide"
+    },
+    {
+      "ok": false,
+      "payload_bytes": 745,
+      "http": 422,
+      "latency_s": 0.47,
+      "detail": "{\"error\":{\"message\":\"HTTP 422: {\\\"error\\\":{\\\"type\\\":\\\"validation_failed\\\",\\\"message\\\":\\\"question q: 27 candidates exceed the 26 single-token labels this route supports\\\"}}\\n\",\"code\":422}}",
+      "label": "choice 26 + none_of_these",
+      "model": "upstage/solar-decide"
+    },
+    {
+      "ok": true,
+      "payload_bytes": 720,
+      "latency_s": 0.34,
+      "answers": {
+        "q": {
+          "type": "choice",
+          "choice": "none_of_these",
+          "probabilities": {
+            "opt-020": 0,
+            "opt-023": 0,
+            "opt-015": 0,
+            "opt-005": 0.01,
+            "opt-019": 0,
+            "none_of_these": 0.9,
+            "opt-018": 0,
+            "opt-014": 0,
+            "opt-003": 0,
+            "opt-016": 0,
+            "opt-021": 0,
+            "opt-022": 0,
+            "opt-009": 0,
+            "opt-017": 0,
+            "opt-004": 0,
+            "opt-010": 0,
+            "opt-011": 0,
+            "opt-001": 0.03,
+            "opt-008": 0,
+            "opt-013": 0,
+            "opt-007": 0,
+            "opt-006": 0,
+            "opt-012": 0,
+            "opt-024": 0,
+            "opt-002": 0,
+            "opt-000": 0.060000000000000005
+          },
+          "confidence": 0.89
+        }
+      },
+      "usage": {
+        "input_tokens": 798,
+        "output_tokens": 305,
+        "cost": 3.3516e-05
+      },
+      "label": "choice 25 + none_of_these",
+      "model": "typesafe/jev-1.13"
+    },
+    {
+      "ok": false,
+      "payload_bytes": 444,
+      "http": 422,
+      "latency_s": 0.51,
+      "detail": "{\"error\":{\"message\":\"HTTP 422: {\\\"error\\\":{\\\"type\\\":\\\"validation_failed\\\",\\\"message\\\":\\\"request validation failed\\\",\\\"details\\\":[{\\\"path\\\":\\\"questions.q.criteria\\\",\\\"message\\\":\\\"score criteria must contain 2 to 10 levels, got 26\\\"}]}}\\n\",\"code\":422}}",
+      "label": "score 26",
+      "model": "upstage/solar-decide"
+    },
+    {
+      "ok": false,
+      "payload_bytes": 732,
+      "http": 422,
+      "latency_s": 0.48,
+      "detail": "{\"error\":{\"message\":\"HTTP 422: {\\\"error\\\":{\\\"type\\\":\\\"validation_failed\\\",\\\"message\\\":\\\"request validation failed\\\",\\\"details\\\":[{\\\"path\\\":\\\"questions.q.criteria\\\",\\\"message\\\":\\\"score criteria must contain 2 to 10 levels, got 50\\\"}]}}\\n\",\"code\":422}}",
+      "label": "score 50",
+      "model": "upstage/solar-decide"
+    },
+    {
+      "ok": false,
+      "payload_bytes": 2424,
+      "http": 422,
+      "latency_s": 0.25,
+      "detail": "{\"error\":{\"message\":\"HTTP 422: {\\\"error\\\":{\\\"type\\\":\\\"validation_failed\\\",\\\"message\\\":\\\"request validation failed\\\",\\\"details\\\":[{\\\"path\\\":\\\"questions.q.criteria\\\",\\\"message\\\":\\\"score criteria must contain 2 to 10 levels, got 184\\\"}]}}\\n\",\"code\":422}}",
+      "label": "score 184",
+      "model": "upstage/solar-decide"
+    },
+    {
+      "ok": false,
+      "payload_bytes": 3932,
+      "http": 422,
+      "latency_s": 0.46,
+      "detail": "{\"error\":{\"message\":\"HTTP 422: {\\\"error\\\":{\\\"type\\\":\\\"validation_failed\\\",\\\"message\\\":\\\"request validation failed\\\",\\\"details\\\":[{\\\"path\\\":\\\"questions.q.criteria\\\",\\\"message\\\":\\\"score criteria must contain 2 to 10 levels, got 300\\\"}]}}\\n\",\"code\":422}}",
+      "label": "score 300",
+      "model": "upstage/solar-decide"
+    },
+    {
+      "ok": false,
+      "payload_bytes": 729,
+      "http": 400,
+      "latency_s": 0.28,
+      "detail": "{\"error\":{\"message\":\"HTTP 400: {\\\"detail\\\":\\\"Too many score levels. Must have at most 10 levels.\\\"}\",\"code\":400}}",
+      "label": "score 50",
+      "model": "typesafe/jev-1.13"
+    },
+    {
+      "ok": false,
+      "payload_bytes": 2421,
+      "http": 400,
+      "latency_s": 0.39,
+      "detail": "{\"error\":{\"message\":\"HTTP 400: {\\\"detail\\\":\\\"Too many score levels. Must have at most 10 levels.\\\"}\",\"code\":400}}",
+      "label": "score 184",
+      "model": "typesafe/jev-1.13"
+    },
+    {
+      "ok": true,
+      "payload_bytes": 4170,
+      "latency_s": 0.92,
+      "answers": {
+        "q": {
+          "type": "noul",
+          "noul": 0.982791
+        }
+      },
+      "usage": {
+        "input_tokens": 2383,
+        "output_tokens": 1,
+        "cost": 0.00011915
+      },
+      "label": "state 4K chars",
+      "model": "upstage/solar-decide"
+    },
+    {
+      "ok": true,
+      "payload_bytes": 16170,
+      "latency_s": 1.06,
+      "answers": {
+        "q": {
+          "type": "noul",
+          "noul": 0.991456
+        }
+      },
+      "usage": {
+        "input_tokens": 8383,
+        "output_tokens": 1,
+        "cost": 0.00041915
+      },
+      "label": "state 16K chars",
+      "model": "upstage/solar-decide"
+    },
+    {
+      "ok": true,
+      "payload_bytes": 32170,
+      "latency_s": 1.46,
+      "answers": {
+        "q": {
+          "type": "noul",
+          "noul": 0.982836
+        }
+      },
+      "usage": {
+        "input_tokens": 16383,
+        "output_tokens": 1,
+        "cost": 0.00081915
+      },
+      "label": "state 32K chars",
+      "model": "upstage/solar-decide"
+    },
+    {
+      "ok": true,
+      "payload_bytes": 64170,
+      "latency_s": 1.88,
+      "answers": {
+        "q": {
+          "type": "noul",
+          "noul": 0.988052
+        }
+      },
+      "usage": {
+        "input_tokens": 32383,
+        "output_tokens": 1,
+        "cost": 0.00161915
+      },
+      "label": "state 64K chars",
+      "model": "upstage/solar-decide"
+    },
+    {
+      "ok": true,
+      "payload_bytes": 128170,
+      "latency_s": 2.3,
+      "answers": {
+        "q": {
+          "type": "noul",
+          "noul": 0.987502
+        }
+      },
+      "usage": {
+        "input_tokens": 64383,
+        "output_tokens": 1,
+        "cost": 0.00321915
+      },
+      "label": "state 128K chars",
+      "model": "upstage/solar-decide"
+    },
+    {
+      "ok": true,
+      "payload_bytes": 4167,
+      "latency_s": 0.39,
+      "answers": {
+        "q": {
+          "type": "noul",
+          "noul": 0.84
+        }
+      },
+      "usage": {
+        "input_tokens": 2290,
+        "output_tokens": 20,
+        "cost": 9.618e-05
+      },
+      "label": "state 4K chars",
+      "model": "typesafe/jev-1.13"
+    },
+    {
+      "ok": true,
+      "payload_bytes": 32167,
+      "latency_s": 0.49,
+      "answers": {
+        "q": {
+          "type": "noul",
+          "noul": 0.9
+        }
+      },
+      "usage": {
+        "input_tokens": 16290,
+        "output_tokens": 20,
+        "cost": 0.00068418
+      },
+      "label": "state 32K chars",
+      "model": "typesafe/jev-1.13"
+    },
+    {
+      "ok": true,
+      "payload_bytes": 64167,
+      "latency_s": 0.57,
+      "answers": {
+        "q": {
+          "type": "noul",
+          "noul": 0.92
+        }
+      },
+      "usage": {
+        "input_tokens": 32290,
+        "output_tokens": 20,
+        "cost": 0.00135618
+      },
+      "label": "state 64K chars",
+      "model": "typesafe/jev-1.13"
+    },
+    {
+      "ok": false,
+      "payload_bytes": 128167,
+      "http": 400,
+      "latency_s": 0.5,
+      "detail": "{\"error\":{\"message\":\"HTTP 400: {\\\"detail\\\":{\\\"error_type\\\":\\\"max_tokens_exceeded\\\"}}\",\"code\":400}}",
+      "label": "state 128K chars",
+      "model": "typesafe/jev-1.13"
+    }
+  ]
+}

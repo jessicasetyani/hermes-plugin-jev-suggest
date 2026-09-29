@@ -1,0 +1,767 @@
+{
+  "ts": "2026-09-29T00:13:17.708590+00:00",
+  "rows": [
+    {
+      "model": "typesafe/jev-1.13",
+      "plant": "backup-restore-verification",
+      "shortlist": [
+        "systematic-debugging",
+        "microsoft-graph-integration",
+        "teams-meeting-summarizer"
+      ],
+      "plant_in_shortlist": false,
+      "variants": {
+        "A_production": {
+          "ok": true,
+          "selected": "systematic-debugging",
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.32
+        },
+        "B_forced": {
+          "ok": true,
+          "selected": "systematic-debugging",
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.33
+        },
+        "C_score": {
+          "ok": true,
+          "selected": 0.96,
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.31
+        },
+        "D_scored_each": {
+          "ok": true,
+          "selected": "systematic-debugging",
+          "scores": {
+            "systematic-debugging": 1.87,
+            "microsoft-graph-integration": 1.03,
+            "teams-meeting-summarizer": 0
+          },
+          "correct": false,
+          "rejected": false
+        }
+      }
+    },
+    {
+      "model": "typesafe/jev-1.13",
+      "plant": "ssl-cert-inspection",
+      "shortlist": [
+        "ssl-cert-inspection",
+        "event-spatial-layout",
+        "blogwatcher"
+      ],
+      "plant_in_shortlist": true,
+      "variants": {
+        "A_production": {
+          "ok": true,
+          "selected": "ssl-cert-inspection",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.36
+        },
+        "B_forced": {
+          "ok": true,
+          "selected": "ssl-cert-inspection",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.35
+        },
+        "C_score": {
+          "ok": true,
+          "selected": 1.88,
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.5
+        },
+        "D_scored_each": {
+          "ok": true,
+          "selected": "ssl-cert-inspection",
+          "scores": {
+            "ssl-cert-inspection": 1.65,
+            "event-spatial-layout": 0,
+            "blogwatcher": 0
+          },
+          "correct": true,
+          "rejected": false
+        }
+      }
+    },
+    {
+      "model": "typesafe/jev-1.13",
+      "plant": "security-release-triage",
+      "shortlist": [
+        "security-release-triage",
+        "systematic-debugging",
+        "github-code-review"
+      ],
+      "plant_in_shortlist": true,
+      "variants": {
+        "A_production": {
+          "ok": true,
+          "selected": "security-release-triage",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.4
+        },
+        "B_forced": {
+          "ok": true,
+          "selected": "security-release-triage",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.4
+        },
+        "C_score": {
+          "ok": true,
+          "selected": 1.85,
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.41
+        },
+        "D_scored_each": {
+          "ok": true,
+          "selected": "security-release-triage",
+          "scores": {
+            "security-release-triage": 1.73,
+            "systematic-debugging": 1.15,
+            "github-code-review": 0.66
+          },
+          "correct": true,
+          "rejected": false
+        }
+      }
+    },
+    {
+      "model": "typesafe/jev-1.13",
+      "plant": "excel-ledger-reconciliation",
+      "shortlist": [
+        "excel-ledger-reconciliation",
+        "nano-pdf",
+        "touchdesigner-mcp"
+      ],
+      "plant_in_shortlist": true,
+      "variants": {
+        "A_production": {
+          "ok": true,
+          "selected": "excel-ledger-reconciliation",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.32
+        },
+        "B_forced": {
+          "ok": true,
+          "selected": "excel-ledger-reconciliation",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.37
+        },
+        "C_score": {
+          "ok": true,
+          "selected": 1.95,
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.39
+        },
+        "D_scored_each": {
+          "ok": true,
+          "selected": "excel-ledger-reconciliation",
+          "scores": {
+            "excel-ledger-reconciliation": 1.99,
+            "nano-pdf": 0.07,
+            "touchdesigner-mcp": 0
+          },
+          "correct": true,
+          "rejected": false
+        }
+      }
+    },
+    {
+      "model": "typesafe/jev-1.13",
+      "plant": "teams-meeting-summarizer",
+      "shortlist": [
+        "teams-meeting-summarizer",
+        "teams-meeting-pipeline",
+        "llm-inference-capacity-planning"
+      ],
+      "plant_in_shortlist": true,
+      "variants": {
+        "A_production": {
+          "ok": true,
+          "selected": "teams-meeting-summarizer",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.3
+        },
+        "B_forced": {
+          "ok": true,
+          "selected": "teams-meeting-summarizer",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.33
+        },
+        "C_score": {
+          "ok": true,
+          "selected": 1.85,
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.41
+        },
+        "D_scored_each": {
+          "ok": true,
+          "selected": "teams-meeting-pipeline",
+          "scores": {
+            "teams-meeting-summarizer": 1.93,
+            "teams-meeting-pipeline": 2,
+            "llm-inference-capacity-planning": 0
+          },
+          "correct": false,
+          "rejected": false
+        }
+      }
+    },
+    {
+      "model": "typesafe/jev-1.13",
+      "plant": "obsidian",
+      "shortlist": [
+        "obsidian",
+        "product-naming",
+        "songsee"
+      ],
+      "plant_in_shortlist": true,
+      "variants": {
+        "A_production": {
+          "ok": true,
+          "selected": "obsidian",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.32
+        },
+        "B_forced": {
+          "ok": true,
+          "selected": "obsidian",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.34
+        },
+        "C_score": {
+          "ok": true,
+          "selected": 1.96,
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.33
+        },
+        "D_scored_each": {
+          "ok": true,
+          "selected": "obsidian",
+          "scores": {
+            "obsidian": 1.98,
+            "product-naming": 0,
+            "songsee": 0
+          },
+          "correct": true,
+          "rejected": false
+        }
+      }
+    },
+    {
+      "model": "typesafe/jev-1.13",
+      "plant": "mermaid-diagrams",
+      "shortlist": [
+        "mermaid-diagrams",
+        "hermes-plugin-authoring",
+        "ai-box-openwebui"
+      ],
+      "plant_in_shortlist": true,
+      "variants": {
+        "A_production": {
+          "ok": true,
+          "selected": "mermaid-diagrams",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.3
+        },
+        "B_forced": {
+          "ok": true,
+          "selected": "mermaid-diagrams",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.38
+        },
+        "C_score": {
+          "ok": true,
+          "selected": 1.88,
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.33
+        },
+        "D_scored_each": {
+          "ok": true,
+          "selected": "mermaid-diagrams",
+          "scores": {
+            "mermaid-diagrams": 2,
+            "hermes-plugin-authoring": 0,
+            "ai-box-openwebui": 0
+          },
+          "correct": true,
+          "rejected": false
+        }
+      }
+    },
+    {
+      "model": "typesafe/jev-1.13",
+      "plant": "jira-program-setup",
+      "shortlist": [
+        "jira-program-setup",
+        "llm-inference-capacity-planning",
+        "dar-authoring"
+      ],
+      "plant_in_shortlist": true,
+      "variants": {
+        "A_production": {
+          "ok": true,
+          "selected": "jira-program-setup",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.33
+        },
+        "B_forced": {
+          "ok": true,
+          "selected": "jira-program-setup",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.37
+        },
+        "C_score": {
+          "ok": true,
+          "selected": 1.99,
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.37
+        },
+        "D_scored_each": {
+          "ok": true,
+          "selected": "jira-program-setup",
+          "scores": {
+            "jira-program-setup": 1.99,
+            "llm-inference-capacity-planning": 0,
+            "dar-authoring": 0
+          },
+          "correct": true,
+          "rejected": false
+        }
+      }
+    },
+    {
+      "model": "upstage/solar-decide",
+      "plant": "backup-restore-verification",
+      "shortlist": [
+        "evidence-gap-audit",
+        "microsoft-graph-integration",
+        "systematic-debugging"
+      ],
+      "plant_in_shortlist": false,
+      "variants": {
+        "A_production": {
+          "ok": true,
+          "selected": "systematic-debugging",
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.72
+        },
+        "B_forced": {
+          "ok": true,
+          "selected": "evidence-gap-audit",
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.48
+        },
+        "C_score": {
+          "ok": true,
+          "selected": 1.458196,
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.49
+        },
+        "D_scored_each": {
+          "ok": true,
+          "selected": "microsoft-graph-integration",
+          "scores": {
+            "evidence-gap-audit": 1.746484,
+            "microsoft-graph-integration": 1.930392,
+            "systematic-debugging": 1.819776
+          },
+          "correct": false,
+          "rejected": false
+        }
+      }
+    },
+    {
+      "model": "upstage/solar-decide",
+      "plant": "ssl-cert-inspection",
+      "shortlist": [
+        "ssl-cert-inspection",
+        "cloud-hosting-verification",
+        "product-price-monitor"
+      ],
+      "plant_in_shortlist": true,
+      "variants": {
+        "A_production": {
+          "ok": true,
+          "selected": "ssl-cert-inspection",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 1.6
+        },
+        "B_forced": {
+          "ok": true,
+          "selected": "ssl-cert-inspection",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.55
+        },
+        "C_score": {
+          "ok": true,
+          "selected": 1.567005,
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.46
+        },
+        "D_scored_each": {
+          "ok": true,
+          "selected": "ssl-cert-inspection",
+          "scores": {
+            "ssl-cert-inspection": 1.938101,
+            "cloud-hosting-verification": 1.458196,
+            "product-price-monitor": 1.458196
+          },
+          "correct": true,
+          "rejected": false
+        }
+      }
+    },
+    {
+      "model": "upstage/solar-decide",
+      "plant": "security-release-triage",
+      "shortlist": [
+        "security-release-triage",
+        "hermes-agent-skill-authoring",
+        "document-to-action-items"
+      ],
+      "plant_in_shortlist": true,
+      "variants": {
+        "A_production": {
+          "ok": true,
+          "selected": "security-release-triage",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.33
+        },
+        "B_forced": {
+          "ok": true,
+          "selected": "security-release-triage",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.34
+        },
+        "C_score": {
+          "ok": true,
+          "selected": 1.883213,
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.36
+        },
+        "D_scored_each": {
+          "ok": true,
+          "selected": "security-release-triage",
+          "scores": {
+            "security-release-triage": 1.972698,
+            "hermes-agent-skill-authoring": 1.488602,
+            "document-to-action-items": 1.93426
+          },
+          "correct": true,
+          "rejected": false
+        }
+      }
+    },
+    {
+      "model": "upstage/solar-decide",
+      "plant": "excel-ledger-reconciliation",
+      "shortlist": [
+        "excel-ledger-reconciliation",
+        "aws-billing-analytics",
+        "jira-program-setup"
+      ],
+      "plant_in_shortlist": true,
+      "variants": {
+        "A_production": {
+          "ok": true,
+          "selected": "excel-ledger-reconciliation",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.44
+        },
+        "B_forced": {
+          "ok": true,
+          "selected": "excel-ledger-reconciliation",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.52
+        },
+        "C_score": {
+          "ok": true,
+          "selected": 1.537158,
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.55
+        },
+        "D_scored_each": {
+          "ok": true,
+          "selected": "excel-ledger-reconciliation",
+          "scores": {
+            "excel-ledger-reconciliation": 1.956984,
+            "aws-billing-analytics": 1.207851,
+            "jira-program-setup": 1
+          },
+          "correct": true,
+          "rejected": false
+        }
+      }
+    },
+    {
+      "model": "upstage/solar-decide",
+      "plant": "teams-meeting-summarizer",
+      "shortlist": [
+        "teams-meeting-summarizer",
+        "ai-media-production",
+        "teams-meeting-pipeline"
+      ],
+      "plant_in_shortlist": true,
+      "variants": {
+        "A_production": {
+          "ok": true,
+          "selected": "teams-meeting-summarizer",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.63
+        },
+        "B_forced": {
+          "ok": true,
+          "selected": "teams-meeting-summarizer",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.4
+        },
+        "C_score": {
+          "ok": true,
+          "selected": 1.752352,
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.32
+        },
+        "D_scored_each": {
+          "ok": true,
+          "selected": "teams-meeting-pipeline",
+          "scores": {
+            "teams-meeting-summarizer": 1.971773,
+            "ai-media-production": 0.157372,
+            "teams-meeting-pipeline": 1.977077
+          },
+          "correct": false,
+          "rejected": false
+        }
+      }
+    },
+    {
+      "model": "upstage/solar-decide",
+      "plant": "obsidian",
+      "shortlist": [
+        "obsidian",
+        "meeting-notes-authoring",
+        "tui-widgets"
+      ],
+      "plant_in_shortlist": true,
+      "variants": {
+        "A_production": {
+          "ok": true,
+          "selected": "meeting-notes-authoring",
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.93
+        },
+        "B_forced": {
+          "ok": true,
+          "selected": "meeting-notes-authoring",
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.58
+        },
+        "C_score": {
+          "ok": true,
+          "selected": 1.90888,
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.52
+        },
+        "D_scored_each": {
+          "ok": true,
+          "selected": "obsidian",
+          "scores": {
+            "obsidian": 1.981006,
+            "meeting-notes-authoring": 1.969543,
+            "tui-widgets": 1
+          },
+          "correct": true,
+          "rejected": false
+        }
+      }
+    },
+    {
+      "model": "upstage/solar-decide",
+      "plant": "mermaid-diagrams",
+      "shortlist": [
+        "mermaid-diagrams",
+        "youtube-content",
+        "openrouter-management"
+      ],
+      "plant_in_shortlist": true,
+      "variants": {
+        "A_production": {
+          "ok": true,
+          "selected": "mermaid-diagrams",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.54
+        },
+        "B_forced": {
+          "ok": true,
+          "selected": "mermaid-diagrams",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.53
+        },
+        "C_score": {
+          "ok": true,
+          "selected": 1.988411,
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.47
+        },
+        "D_scored_each": {
+          "ok": true,
+          "selected": "mermaid-diagrams",
+          "scores": {
+            "mermaid-diagrams": 1.962675,
+            "youtube-content": 0.024035,
+            "openrouter-management": 0.198215
+          },
+          "correct": true,
+          "rejected": false
+        }
+      }
+    },
+    {
+      "model": "upstage/solar-decide",
+      "plant": "jira-program-setup",
+      "shortlist": [
+        "jira-program-setup",
+        "codex",
+        "dar-authoring"
+      ],
+      "plant_in_shortlist": true,
+      "variants": {
+        "A_production": {
+          "ok": true,
+          "selected": "jira-program-setup",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.86
+        },
+        "B_forced": {
+          "ok": true,
+          "selected": "jira-program-setup",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.5
+        },
+        "C_score": {
+          "ok": true,
+          "selected": 1.994146,
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.9
+        },
+        "D_scored_each": {
+          "ok": true,
+          "selected": "jira-program-setup",
+          "scores": {
+            "jira-program-setup": 1.973514,
+            "codex": 1.189268,
+            "dar-authoring": 0.079337
+          },
+          "correct": true,
+          "rejected": false
+        }
+      }
+    }
+  ],
+  "summary": [
+    {
+      "model": "typesafe/jev-1.13",
+      "variant": "A_production",
+      "correct": 7,
+      "rejected": 0,
+      "n": 7
+    },
+    {
+      "model": "typesafe/jev-1.13",
+      "variant": "B_forced",
+      "correct": 7,
+      "rejected": 0,
+      "n": 7
+    },
+    {
+      "model": "typesafe/jev-1.13",
+      "variant": "C_score",
+      "correct": 0,
+      "rejected": 0,
+      "n": 7
+    },
+    {
+      "model": "typesafe/jev-1.13",
+      "variant": "D_scored_each",
+      "correct": 6,
+      "rejected": 0,
+      "n": 7
+    },
+    {
+      "model": "upstage/solar-decide",
+      "variant": "A_production",
+      "correct": 6,
+      "rejected": 0,
+      "n": 7
+    },
+    {
+      "model": "upstage/solar-decide",
+      "variant": "B_forced",
+      "correct": 6,
+      "rejected": 0,
+      "n": 7
+    },
+    {
+      "model": "upstage/solar-decide",
+      "variant": "C_score",
+      "correct": 0,
+      "rejected": 0,
+      "n": 7
+    },
+    {
+      "model": "upstage/solar-decide",
+      "variant": "D_scored_each",
+      "correct": 6,
+      "rejected": 0,
+      "n": 7
+    }
+  ]
+}

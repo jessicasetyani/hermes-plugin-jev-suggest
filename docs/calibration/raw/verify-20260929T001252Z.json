@@ -1,0 +1,577 @@
+{
+  "ts": "2026-09-29T00:12:17.632497+00:00",
+  "rows": [
+    {
+      "model": "typesafe/jev-1.13",
+      "plant": "backup-restore-verification",
+      "shortlist": [
+        "systematic-debugging",
+        "microsoft-graph-integration",
+        "microsoft-365-licensing"
+      ],
+      "plant_in_shortlist": false,
+      "variants": {
+        "A_production": {
+          "ok": true,
+          "selected": "systematic-debugging",
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.38
+        },
+        "B_forced": {
+          "ok": true,
+          "selected": "systematic-debugging",
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.34
+        },
+        "C_score": {
+          "ok": true,
+          "selected": 1.3,
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.33
+        }
+      }
+    },
+    {
+      "model": "typesafe/jev-1.13",
+      "plant": "ssl-cert-inspection",
+      "shortlist": [
+        "ssl-cert-inspection",
+        "image-text-extraction",
+        "maps"
+      ],
+      "plant_in_shortlist": true,
+      "variants": {
+        "A_production": {
+          "ok": true,
+          "selected": "ssl-cert-inspection",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.31
+        },
+        "B_forced": {
+          "ok": true,
+          "selected": "ssl-cert-inspection",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.35
+        },
+        "C_score": {
+          "ok": true,
+          "selected": 1.84,
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.8
+        }
+      }
+    },
+    {
+      "model": "typesafe/jev-1.13",
+      "plant": "security-release-triage",
+      "shortlist": [
+        "security-release-triage",
+        "systematic-debugging",
+        "github-code-review"
+      ],
+      "plant_in_shortlist": true,
+      "variants": {
+        "A_production": {
+          "ok": true,
+          "selected": "security-release-triage",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.4
+        },
+        "B_forced": {
+          "ok": true,
+          "selected": "security-release-triage",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.41
+        },
+        "C_score": {
+          "ok": true,
+          "selected": 1.87,
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.41
+        }
+      }
+    },
+    {
+      "model": "typesafe/jev-1.13",
+      "plant": "excel-ledger-reconciliation",
+      "shortlist": [
+        "excel-ledger-reconciliation",
+        "requesting-code-review",
+        "multifinance-client-strategy"
+      ],
+      "plant_in_shortlist": true,
+      "variants": {
+        "A_production": {
+          "ok": true,
+          "selected": "excel-ledger-reconciliation",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.31
+        },
+        "B_forced": {
+          "ok": true,
+          "selected": "excel-ledger-reconciliation",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.33
+        },
+        "C_score": {
+          "ok": true,
+          "selected": 1.96,
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.32
+        }
+      }
+    },
+    {
+      "model": "typesafe/jev-1.13",
+      "plant": "teams-meeting-summarizer",
+      "shortlist": [
+        "teams-meeting-summarizer",
+        "teams-meeting-pipeline",
+        "huggingface-hub"
+      ],
+      "plant_in_shortlist": true,
+      "variants": {
+        "A_production": {
+          "ok": true,
+          "selected": "teams-meeting-summarizer",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.34
+        },
+        "B_forced": {
+          "ok": true,
+          "selected": "teams-meeting-summarizer",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.36
+        },
+        "C_score": {
+          "ok": true,
+          "selected": 1.85,
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.38
+        }
+      }
+    },
+    {
+      "model": "typesafe/jev-1.13",
+      "plant": "obsidian",
+      "shortlist": [
+        "obsidian",
+        "presentation-av-ergonomics",
+        "product-naming"
+      ],
+      "plant_in_shortlist": true,
+      "variants": {
+        "A_production": {
+          "ok": true,
+          "selected": "obsidian",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.33
+        },
+        "B_forced": {
+          "ok": true,
+          "selected": "obsidian",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.29
+        },
+        "C_score": {
+          "ok": true,
+          "selected": 1.94,
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.31
+        }
+      }
+    },
+    {
+      "model": "typesafe/jev-1.13",
+      "plant": "mermaid-diagrams",
+      "shortlist": [
+        "mermaid-diagrams",
+        "jupyter-live-kernel",
+        "p5js"
+      ],
+      "plant_in_shortlist": true,
+      "variants": {
+        "A_production": {
+          "ok": true,
+          "selected": "mermaid-diagrams",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.31
+        },
+        "B_forced": {
+          "ok": true,
+          "selected": "mermaid-diagrams",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.34
+        },
+        "C_score": {
+          "ok": true,
+          "selected": 1.97,
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.4
+        }
+      }
+    },
+    {
+      "model": "typesafe/jev-1.13",
+      "plant": "jira-program-setup",
+      "shortlist": [
+        "jira-program-setup",
+        "codex",
+        "dar-authoring"
+      ],
+      "plant_in_shortlist": true,
+      "variants": {
+        "A_production": {
+          "ok": true,
+          "selected": "jira-program-setup",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.42
+        },
+        "B_forced": {
+          "ok": true,
+          "selected": "jira-program-setup",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.35
+        },
+        "C_score": {
+          "ok": true,
+          "selected": 1.99,
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.32
+        }
+      }
+    },
+    {
+      "model": "upstage/solar-decide",
+      "plant": "backup-restore-verification",
+      "shortlist": [
+        "evidence-gap-audit",
+        "microsoft-graph-integration",
+        "systematic-debugging"
+      ],
+      "plant_in_shortlist": false,
+      "variants": {
+        "A_production": {
+          "ok": true,
+          "selected": "systematic-debugging",
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.52
+        },
+        "B_forced": {
+          "ok": true,
+          "selected": "evidence-gap-audit",
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.55
+        },
+        "C_score": {
+          "ok": true,
+          "selected": 1.458196,
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.56
+        }
+      }
+    },
+    {
+      "model": "upstage/solar-decide",
+      "plant": "ssl-cert-inspection",
+      "shortlist": [
+        "ssl-cert-inspection",
+        "cloud-hosting-verification",
+        "product-price-monitor"
+      ],
+      "plant_in_shortlist": true,
+      "variants": {
+        "A_production": {
+          "ok": true,
+          "selected": "ssl-cert-inspection",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.55
+        },
+        "B_forced": {
+          "ok": true,
+          "selected": "ssl-cert-inspection",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.94
+        },
+        "C_score": {
+          "ok": true,
+          "selected": 1.464093,
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.53
+        }
+      }
+    },
+    {
+      "model": "upstage/solar-decide",
+      "plant": "security-release-triage",
+      "shortlist": [
+        "security-release-triage",
+        "hermes-agent-skill-authoring",
+        "document-to-action-items"
+      ],
+      "plant_in_shortlist": true,
+      "variants": {
+        "A_production": {
+          "ok": true,
+          "selected": "security-release-triage",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.38
+        },
+        "B_forced": {
+          "ok": true,
+          "selected": "security-release-triage",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.5
+        },
+        "C_score": {
+          "ok": true,
+          "selected": 1.772991,
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.37
+        }
+      }
+    },
+    {
+      "model": "upstage/solar-decide",
+      "plant": "excel-ledger-reconciliation",
+      "shortlist": [
+        "excel-ledger-reconciliation",
+        "aws-billing-analytics",
+        "jira-program-setup"
+      ],
+      "plant_in_shortlist": true,
+      "variants": {
+        "A_production": {
+          "ok": true,
+          "selected": "excel-ledger-reconciliation",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.39
+        },
+        "B_forced": {
+          "ok": true,
+          "selected": "excel-ledger-reconciliation",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 1.3
+        },
+        "C_score": {
+          "ok": true,
+          "selected": 1.382088,
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.4
+        }
+      }
+    },
+    {
+      "model": "upstage/solar-decide",
+      "plant": "teams-meeting-summarizer",
+      "shortlist": [
+        "teams-meeting-summarizer",
+        "ai-media-production",
+        "teams-meeting-pipeline"
+      ],
+      "plant_in_shortlist": true,
+      "variants": {
+        "A_production": {
+          "ok": true,
+          "selected": "teams-meeting-summarizer",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.39
+        },
+        "B_forced": {
+          "ok": true,
+          "selected": "teams-meeting-summarizer",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.39
+        },
+        "C_score": {
+          "ok": true,
+          "selected": 1.752352,
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.37
+        }
+      }
+    },
+    {
+      "model": "upstage/solar-decide",
+      "plant": "obsidian",
+      "shortlist": [
+        "obsidian",
+        "tui-widgets",
+        "meeting-notes-authoring"
+      ],
+      "plant_in_shortlist": true,
+      "variants": {
+        "A_production": {
+          "ok": true,
+          "selected": "meeting-notes-authoring",
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.81
+        },
+        "B_forced": {
+          "ok": true,
+          "selected": "meeting-notes-authoring",
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.54
+        },
+        "C_score": {
+          "ok": true,
+          "selected": 1.883205,
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.7
+        }
+      }
+    },
+    {
+      "model": "upstage/solar-decide",
+      "plant": "mermaid-diagrams",
+      "shortlist": [
+        "mermaid-diagrams",
+        "youtube-content",
+        "openrouter-management"
+      ],
+      "plant_in_shortlist": true,
+      "variants": {
+        "A_production": {
+          "ok": true,
+          "selected": "mermaid-diagrams",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.57
+        },
+        "B_forced": {
+          "ok": true,
+          "selected": "mermaid-diagrams",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.7
+        },
+        "C_score": {
+          "ok": true,
+          "selected": 1.983208,
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.6
+        }
+      }
+    },
+    {
+      "model": "upstage/solar-decide",
+      "plant": "jira-program-setup",
+      "shortlist": [
+        "jira-program-setup",
+        "codex",
+        "dar-authoring"
+      ],
+      "plant_in_shortlist": true,
+      "variants": {
+        "A_production": {
+          "ok": true,
+          "selected": "jira-program-setup",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.62
+        },
+        "B_forced": {
+          "ok": true,
+          "selected": "jira-program-setup",
+          "correct": true,
+          "rejected": false,
+          "latency_s": 0.78
+        },
+        "C_score": {
+          "ok": true,
+          "selected": 1.992682,
+          "correct": false,
+          "rejected": false,
+          "latency_s": 0.66
+        }
+      }
+    }
+  ],
+  "summary": [
+    {
+      "model": "typesafe/jev-1.13",
+      "variant": "A_production",
+      "correct": 7,
+      "rejected": 0,
+      "n": 7
+    },
+    {
+      "model": "typesafe/jev-1.13",
+      "variant": "B_forced",
+      "correct": 7,
+      "rejected": 0,
+      "n": 7
+    },
+    {
+      "model": "typesafe/jev-1.13",
+      "variant": "C_score",
+      "correct": 0,
+      "rejected": 0,
+      "n": 7
+    },
+    {
+      "model": "upstage/solar-decide",
+      "variant": "A_production",
+      "correct": 6,
+      "rejected": 0,
+      "n": 7
+    },
+    {
+      "model": "upstage/solar-decide",
+      "variant": "B_forced",
+      "correct": 6,
+      "rejected": 0,
+      "n": 7
+    },
+    {
+      "model": "upstage/solar-decide",
+      "variant": "C_score",
+      "correct": 0,
+      "rejected": 0,
+      "n": 7
+    }
+  ]
+}

@@ -318,7 +318,7 @@ check("hook slash logged silent/slash",
       and captured[0].get("mode") == "on"
       and captured[0].get("session_id") == "s1")
 
-# 12. solar clamp: chunk 240 -> 26 on upstage/solar-decide
+# 12. solar clamp: chunk 240 -> 25 on upstage/solar-decide (26 labels incl. none_of_these)
 m._ROSTER_CACHE = [{"name": f"c{i:03d}", "short": f"cand {i}",
                     "full": f"cand {i} full", "excerpt": f"ex {i}"}
                    for i in range(60)]
@@ -345,8 +345,43 @@ m._decide = _solar_stub
 m._LAST_INFO.clear()
 solar_st = base_settings(openrouter_model="upstage/solar-decide")
 w = m.suggest_skill("please deploy the production site now sir", solar_st)
-check("solar clamps to 26-opt chunks", m._LAST_INFO.get("chunks") == 3)
+check("solar clamps to 25-item chunks", m._LAST_INFO.get("chunks") == 3)
 check("solar flow completes", w == "c000")
+
+# 14. every solar chunk must fit 26 labels including none_of_these
+big_roster = [{"name": f"d{i:03d}", "short": f"d{i}", "full": f"d{i} full",
+               "excerpt": f"ex {i}"} for i in range(60)]
+seen_sizes = []
+m._ROSTER_CACHE = big_roster
+
+
+def _label_stub(state, questions, settings):
+    q = questions["which_skill"]
+    seen_sizes.append(len(q["criteria"]))
+    assert len(q["criteria"]) <= 26, f"solar label overflow: {len(q['criteria'])}"
+    names_ = [k for k in q["criteria"] if k != m.NONE_OPTION]
+    ans = {"which_skill": {"choice": names_[0], "probabilities": {names_[0]: 0.8}}}
+    if "need_act" in questions:
+        ans.update({"need_act": {"noul": 0.9}, "need_steps": {"noul": 0.9},
+                    "just_talk": {"noul": 0.0}})
+    if "best_of_shortlist" in questions:
+        return {"answers": {"best_of_shortlist": {"choice": "d000", "probabilities": {"d000": 0.9}},
+                            "fits_d000": {"noul": 0.9}}, "usage": {}}
+    return {"answers": ans, "usage": {}}
+
+
+m._decide = _label_stub
+m.suggest_skill("please deploy the production site now sir",
+                base_settings(openrouter_model="upstage/solar-decide"))
+check("solar chunks carry none_of_these within 26", max(seen_sizes) == 26 and len(seen_sizes) >= 3)
+
+# 15. solar calibration guardrail (probe 2026-09-29: gate scores ~2.4x lower than Jev)
+check("solar warns on Jev-tuned gate",
+      bool(m._solar_config_warning("upstage/solar-decide", {"gate": 0.30})))
+check("solar gate 0.10 is accepted",
+      m._solar_config_warning("upstage/solar-decide", {"gate": 0.10}) is None)
+check("jev never warns",
+      m._solar_config_warning("typesafe/jev-1.13", {"gate": 0.30}) is None)
 
 # 13. mode-off kill switch (env var removed): explicit settings win
 m._decide = _real_decide
