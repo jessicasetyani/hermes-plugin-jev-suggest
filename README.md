@@ -99,6 +99,10 @@ Full key list with defaults (`plugin.yaml` `config_schema` is authoritative):
 | `cache_seconds` | `300` | Identical calls answered from cache per window |
 | `openrouter_model` | `~typesafe/jev-latest` | Allowlist: `upstage/solar-decide` / `~typesafe/jev-latest` / `typesafe/jev-1.13` |
 | `openrouter_base_url` | `https://openrouter.ai/api/alpha` | Base URL (endpoint = base + `/decisions`) |
+| `log_enabled` | `true` | Write the event log at all (`false` = plugin runs, nothing recorded) |
+| `log_max_bytes` | `5242880` | Rotate the event log at this size; `0` = never rotate |
+| `log_keep_files` | `10` | Rotated logs kept, oldest deleted first; `0` = keep everything |
+| `log_retention_days` | `30` | Delete rotations older than this; `0` = keep forever |
 
 Env fallback (backward compat; config.yaml wins when a ctx is bound):
 `JEV_SUGGEST_MODEL`, `JEV_SUGGEST_GATE`, `JEV_SUGGEST_FITS`,
@@ -127,6 +131,33 @@ Written to `~/.hermes/logs/jev-suggest-events.jsonl` — runtime logs belong in
 the logs dir (same convention as the router's `jev-skill-router.log`); the
 plugin directory holds code only.
 
+**Lifecycle policy** (all settings, no env vars needed):
+
+| Setting | Default | Behaviour |
+|---|---|---|
+| `log_enabled` | `true` | `false` → plugin keeps working, nothing is written |
+| `log_max_bytes` | 5 MB | Active file is renamed to `jev-suggest-events-<stamp>.jsonl` when it reaches this size |
+| `log_keep_files` | 10 | Oldest rotations are deleted beyond this count |
+| `log_retention_days` | 30 | Rotations older than this are deleted (0 = keep forever) |
+
+Rotation and pruning happen on the next append, so there is no background job
+and no dependency on the agent loop being alive. `hermes jev-suggest status`
+prints the active policy and the rotation count.
+
+**Acceptance is exact, not inferred.** When a suggestion is injected, the hook
+remembers it per session; every `skill_tool` event then carries the suggestion
+it followed:
+
+```
+skill_tool: skill, tool, session_id, turn_id,
+            suggested,            # winner of this session's last suggestion
+            suggested_turn_id,    # the turn that produced it
+            matched               # true/false: did the load match the suggestion
+```
+
+Acceptance rate = `matched=True` / (suggest events with a winner). No
+time-ordered guessing, no session-level joins.
+
 Every `suggest` event carries the union of both plugins' fields, so one day
 the router log can be merged mechanically:
 
@@ -152,8 +183,11 @@ Merge historic logs: `python3 scripts/merge_router_log.py` → writes
 ## Verify
 
 ```
-python3 tests/test_offline.py   # offline logic + fail-open, no network
-hermes plugins validate .       # catalog admission gate
+python3 tests/test_offline.py          # offline logic + fail-open, no network
+hermes plugins validate .              # catalog admission gate
+python3 scripts/log_stats.py           # funnel/gate/latency/cost/acceptance from the live log
+python3 scripts/log_stats.py --json    # machine-readable, for dashboards
+python3 scripts/merge_router_log.py    # merge historic router + suggest rows
 ```
 
 ## Calibration

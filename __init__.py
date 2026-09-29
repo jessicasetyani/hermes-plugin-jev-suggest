@@ -35,7 +35,7 @@ import os
 import time
 import urllib.error
 import urllib.request
-from datetime import timezone
+from datetime import datetime, timezone
 from pathlib import Path
 
 logger = logging.getLogger(__name__)
@@ -59,6 +59,10 @@ SOLAR_MODELS = frozenset({"upstage/solar-decide"})
 SOLAR_MAX_CHOICES = 25
 DEFAULT_CHUNK = 240
 MAX_CHOICES = 255  # the API refuses a Choice with more options
+DEFAULT_LOG_MAX_BYTES = 5 * 1024 * 1024   # rotate the event log at this size
+DEFAULT_LOG_KEEP_FILES = 10               # rotated logs kept (0 = keep all)
+DEFAULT_LOG_RETENTION_DAYS = 30           # delete rotated logs older than this (0 = forever)
+
 NONE_OPTION = "none_of_these"
 NONE_THRESHOLD = 0.50  # a non-best chunk with P(none) >= this nominates nobody
 
@@ -103,6 +107,9 @@ _ROSTER_MTIME: float = 0.0
 # Per-run observability (read by on_pre_llm_call after suggest_skill returns).
 _LAST_INFO: dict = {}
 _RUN: dict = {"cost": 0.0, "calls": 0}
+# session_id -> {"skill": winner, "turn_id": ...}; lets skill_tool events carry
+# `suggested`/`matched` so acceptance is exact rather than inferred.
+_SUGGEST_BY_SESSION: dict[str, dict] = {}
 
 # Outcome taxonomy (superset of jev-skill-router's, merge-compatible):
 # router logs only suggested|silent|error with reason no_fit for every
@@ -123,12 +130,70 @@ def _events_path() -> Path:
     return _hermes_home() / "logs" / "jev-suggest-events.jsonl"
 
 
-def _log_event(ev: dict) -> None:
-    """Append one structured event. Never logs user text (PII-safe)."""
+def _log_enabled(settings: dict | None) -> bool:
+    """Event logging switch (settings `log_enabled`, default on)."""
+    val = (settings or {}).get("log_enabled", True)
+    if isinstance(val, bool):
+        return val
+    return str(val).strip().lower() not in ("0", "false", "no", "off", "")
+
+
+def _is_true(val, default: bool = True) -> bool:
+    if val is None:
+        return default
+    if isinstance(val, bool):
+        return val
+    return str(val).strip().lower() in ("1", "true", "yes", "on")
+
+
+def _prune_logs(directory: Path, settings: dict) -> None:
+    """Delete rotated logs past the keep-count or the retention window."""
     try:
+        keep = int(settings.get("log_keep_files", DEFAULT_LOG_KEEP_FILES) or 0)
+        days = int(settings.get("log_retention_days", DEFAULT_LOG_RETENTION_DAYS) or 0)
+        rotated = sorted(directory.glob("jev-suggest-events-*.jsonl"),
+                         key=lambda p: p.stat().st_mtime if p.exists() else 0.0)
+        for path in rotated[:max(0, len(rotated) - keep)] if keep else []:
+            try:
+                path.unlink()
+            except OSError:
+                pass
+        if days > 0:
+            cutoff = time.time() - days * 86400
+            for path in rotated:
+                try:
+                    if path.exists() and path.stat().st_mtime < cutoff:
+                        path.unlink()
+                except OSError:
+                    pass
+    except Exception:
+        pass
+
+
+def _rotate_if_needed(p: Path, settings: dict) -> None:
+    """Size-based rotation: events.jsonl -> events-<stamp>.jsonl, then prune."""
+    max_bytes = int(settings.get("log_max_bytes", DEFAULT_LOG_MAX_BYTES) or 0)
+    if max_bytes <= 0 or not p.exists() or p.stat().st_size < max_bytes:
+        return
+    stamp = datetime.now().strftime("%Y%m%d-%H%M%S-%f")
+    target = p.with_name(f"jev-suggest-events-{stamp}.jsonl")
+    try:
+        p.rename(target)
+    except OSError:
+        return
+    _prune_logs(p.parent, settings)
+
+
+def _log_event(ev: dict, settings: dict | None = None) -> None:
+    """Append one structured event. Never logs user text (PII-safe).
+    Honors `log_enabled`, rotates by size, prunes by keep-count/retention."""
+    try:
+        st = settings or {}
+        if not _log_enabled(st):
+            return
         p = _events_path()
-        if p.exists() and p.stat().st_size > 5 * 1024 * 1024:
-            return  # stop growing; rotate manually
+        p.parent.mkdir(parents=True, exist_ok=True)
+        _rotate_if_needed(p, st)
         with open(p, "a", encoding="utf-8") as f:
             f.write(json.dumps({"ts": time.time(), **ev}, ensure_ascii=False) + "\n")
     except Exception:
@@ -186,6 +251,13 @@ def _settings(ctx=None) -> dict:
             "openrouter_base_url": os.environ.get(
                 "JEV_SUGGEST_ENDPOINT", DEFAULT_BASE_URL + "/decisions"
             ),
+            "log_enabled": _is_true(os.environ.get("JEV_SUGGEST_LOG"), True),
+            "log_max_bytes": int(os.environ.get("JEV_SUGGEST_LOG_MAX_BYTES",
+                                               str(DEFAULT_LOG_MAX_BYTES))),
+            "log_keep_files": int(os.environ.get("JEV_SUGGEST_LOG_KEEP",
+                                                 str(DEFAULT_LOG_KEEP_FILES))),
+            "log_retention_days": int(os.environ.get("JEV_SUGGEST_LOG_RETENTION_DAYS",
+                                                     str(DEFAULT_LOG_RETENTION_DAYS))),
         }
     return {
         "mode": str(_from_ctx(ctx, "mode", "off") or "off").strip().lower(),
@@ -208,6 +280,11 @@ def _settings(ctx=None) -> dict:
         "openrouter_base_url": str(
             _from_ctx(ctx, "openrouter_base_url", DEFAULT_BASE_URL) or DEFAULT_BASE_URL
         ).strip(),
+        "log_enabled": _is_true(_from_ctx(ctx, "log_enabled", True), True),
+        "log_max_bytes": _num_from_ctx(ctx, "log_max_bytes", DEFAULT_LOG_MAX_BYTES, int),
+        "log_keep_files": _num_from_ctx(ctx, "log_keep_files", DEFAULT_LOG_KEEP_FILES, int),
+        "log_retention_days": _num_from_ctx(ctx, "log_retention_days",
+                                            DEFAULT_LOG_RETENTION_DAYS, int),
     }
 
 
@@ -683,8 +760,15 @@ def suggest_skill(user_text: str, settings: dict | None = None) -> str:
 
 def _log_suggest(settings: dict, kwargs: dict, dt: float, text: str,
                  origin: str, winner: str | None = None) -> None:
-    """Write one unified suggest event (router fields + ours). Never raises."""
+    """Write one unified suggest event (router fields + ours). Never raises.
+    Also remembers the winner per session so skill loads can be linked."""
     try:
+        sid = str(kwargs.get("session_id") or "")
+        if sid and winner:
+            _SUGGEST_BY_SESSION[sid] = {"skill": winner,
+                                        "turn_id": str(kwargs.get("turn_id") or "")}
+        if len(_SUGGEST_BY_SESSION) > 64:  # bounded: drop the oldest session
+            _SUGGEST_BY_SESSION.pop(next(iter(_SUGGEST_BY_SESSION)))
         _log_event({
             "event": "suggest",
             "origin": origin,
@@ -705,7 +789,7 @@ def _log_suggest(settings: dict, kwargs: dict, dt: float, text: str,
             "latency_s": round(dt, 2),
             "cost": round(_RUN.get("cost", 0.0), 8),
             "state_chars": len(text),
-        })
+        }, settings)
     except Exception:
         pass
 
@@ -778,9 +862,15 @@ def on_pre_llm_call(**kwargs) -> dict:
 
 
 def on_post_tool_call(**kwargs) -> None:
-    """Record every skill_view load so suggestions can be matched to outcomes."""
+    """Record every skill load, linked to the suggestion that prompted it.
+
+    Exact linkage: the hook stores the winner per session (`_SUGGEST_BY_SESSION`),
+    so each skill_tool event carries the suggested skill for that session plus a
+    `matched` flag — acceptance becomes countable instead of inferred.
+    """
     try:
-        if _disabled(None, _CTX):
+        st = _settings(_CTX)
+        if _disabled(st, _CTX):
             return
         tool_name = str(kwargs.get("tool_name") or "")
         if not tool_name.startswith("skill"):
@@ -789,13 +879,18 @@ def on_post_tool_call(**kwargs) -> None:
         name = args.get("name") if isinstance(args, dict) else None
         if not name:
             return
+        sid = str(kwargs.get("session_id") or "")
+        suggested = _SUGGEST_BY_SESSION.get(sid) or {}
         _log_event({
             "event": "skill_tool",
-            "session_id": str(kwargs.get("session_id") or ""),
+            "session_id": sid,
             "turn_id": str(kwargs.get("turn_id") or ""),
             "tool": tool_name,
             "skill": str(name),
-        })
+            "suggested": suggested.get("skill"),
+            "suggested_turn_id": suggested.get("turn_id"),
+            "matched": suggested.get("skill") == str(name) if suggested else None,
+        }, st)
     except Exception:
         pass
 
@@ -860,6 +955,13 @@ def _cmd_status(ctx, settings: dict) -> int:
     print(f"key:           OPENROUTER_API_KEY={key}")
     print(f"allowlist:     {sorted(ALLOWED_MODELS)}")
     print(f"log:           {_events_path()}")
+    print(f"log policy:    enabled={_log_enabled(settings)} "
+          f"max_bytes={settings.get('log_max_bytes', DEFAULT_LOG_MAX_BYTES)} "
+          f"keep_files={settings.get('log_keep_files', DEFAULT_LOG_KEEP_FILES)} "
+          f"retention_days={settings.get('log_retention_days', DEFAULT_LOG_RETENTION_DAYS)}")
+    rotated = sorted(_events_path().parent.glob("jev-suggest-events-*.jsonl"))
+    if rotated:
+        print(f"log rotated:   {len(rotated)} file(s), newest {rotated[-1].name}")
     warn = _solar_config_warning(
         _resolve_model(str(settings.get("openrouter_model", DEFAULT_MODEL))), settings)
     if warn:

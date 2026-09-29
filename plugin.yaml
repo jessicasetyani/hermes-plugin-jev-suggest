@@ -70,3 +70,19 @@ config_schema:
     type: str
     default: "https://openrouter.ai/api/alpha"
     description: "OpenRouter Decisions API base URL (locked to OpenRouter; no other backend)"
+  log_enabled:
+    type: str
+    default: "true"
+    description: "Write the structured event log (true/false; off disables all log writes)"
+  log_max_bytes:
+    type: int
+    default: 5242880
+    description: "Rotate the event log at this size (bytes); 0 disables rotation"
+  log_keep_files:
+    type: int
+    default: 10
+    description: "Rotated logs kept (oldest deleted first); 0 keeps everything"
+  log_retention_days:
+    type: int
+    default: 30
+    description: "Delete rotated logs older than this; 0 keeps forever"

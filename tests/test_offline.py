@@ -296,7 +296,13 @@ check("transport fail -> silent/api_error",
 # 11. hook logs skip paths with unified fields (no production log touched)
 m._decide = _real_decide
 captured = []
-m._log_event = captured.append
+
+
+def _capture_event(ev, settings=None):
+    captured.append(ev)
+
+
+m._log_event = _capture_event
 
 
 class _Ctx:
@@ -395,6 +401,82 @@ captured.clear()
 r = hook2(user_message="please deploy the site now", session_id="s2", turn_id="t2")
 check("mode off hook returns empty", r == {})
 check("mode off hook does not call decide", len(captured) == 0)
+
+# 16. log policy: rotation, retention, disable switch (fresh module, temp HERMES_HOME)
+import os as _os
+import tempfile
+import time as _time
+
+_fresh_spec = importlib.util.spec_from_file_location("jevs_fresh", REPO / "__init__.py")
+m2 = importlib.util.module_from_spec(_fresh_spec)
+_fresh_spec.loader.exec_module(m2)
+
+_tmp = Path(tempfile.mkdtemp(prefix="jevs-log-"))
+_old_home = _os.environ.get("HERMES_HOME")
+_os.environ["HERMES_HOME"] = str(_tmp)
+_logs = _tmp / "logs"
+st_log = base_settings(log_enabled=True, log_max_bytes=400, log_keep_files=2,
+                       log_retention_days=30)
+for i in range(40):
+    m2._log_event({"event": "selftest", "i": i, "pad": "x" * 40}, st_log)
+_active = _logs / "jev-suggest-events.jsonl"
+_rotated = sorted(_logs.glob("jev-suggest-events-*.jsonl"))
+check("log rotates by size", len(_rotated) >= 2)
+check("log keeps only log_keep_files rotations", len(_rotated) <= 2)
+check("active log still written after rotation",
+      _active.exists() and _active.stat().st_size > 0)
+
+_stale = _logs / "jev-suggest-events-19700101-000000.jsonl"
+_stale.write_text("{}\n")
+_old_ts = _time.time() - 40 * 86400
+_os.utime(_stale, (_old_ts, _old_ts))
+m2._prune_logs(_logs, st_log)
+check("retention deletes rotations past log_retention_days", not _stale.exists())
+
+st_off = base_settings(log_enabled=False)
+check("log_enabled false recognized", m2._log_enabled(st_off) is False)
+_before = _active.stat().st_size
+m2._log_event({"event": "selftest", "should": "not appear"}, st_off)
+check("log_enabled false writes nothing", _active.stat().st_size == _before)
+check("log_enabled true recognized", m2._log_enabled(st_log) is True)
+
+# 17. exact acceptance linkage: skill_tool knows the suggestion for its session
+m2._SUGGEST_BY_SESSION.clear()
+m2._log_suggest(st_log, {"session_id": "s9", "turn_id": "t9"}, 0.5,
+                "check the ssl certificate", origin="hook", winner="ssl-cert-inspection")
+check("suggestion remembered per session",
+      m2._SUGGEST_BY_SESSION.get("s9", {}).get("skill") == "ssl-cert-inspection")
+_linked = []
+
+
+def _capture(ev, settings=None):
+    _linked.append(ev)
+
+
+m2._log_event = _capture
+
+
+class _CtxLog:
+    def get_config(self, key, default):
+        return st_log.get(key, default)
+
+
+m2._CTX = _CtxLog()
+m2.on_post_tool_call(tool_name="skill_view", args={"name": "ssl-cert-inspection"},
+                     session_id="s9", turn_id="t9")
+check("skill_tool carries suggested + matched=True",
+      bool(_linked) and _linked[0].get("suggested") == "ssl-cert-inspection"
+      and _linked[0].get("matched") is True)
+_linked.clear()
+m2.on_post_tool_call(tool_name="skill_view", args={"name": "docx"},
+                     session_id="s9", turn_id="t9")
+check("skill_tool marks unmatched loads",
+      bool(_linked) and _linked[0].get("matched") is False)
+
+if _old_home is None:
+    _os.environ.pop("HERMES_HOME", None)
+else:
+    _os.environ["HERMES_HOME"] = _old_home
 
 print("---")
 print("FAILURES:", fails if fails else "none")
