@@ -158,5 +158,6 @@ hybrid — Jev skim + Solar verify — which produced the same answer for +0.54 
   clamp would have 422'd every chunked Call-1 on this roster (bug found by this probe).
 * `_solar_config_warning()` — `suggest_skill` logs once, and `hermes jev-suggest
   status` prints a warning when Solar is paired with a Jev-tuned gate.
-* Offline tests 44 total, including the 26-label budget and the calibration guardrail.
+* Offline tests: 40 passing checks (39 `check()` calls), including the 26-label
+  budget and the calibration guardrail.
 * `scripts/solar_probe.py` — re-runnable batteries (`limits|accuracy|calib|verify|e2e`).
