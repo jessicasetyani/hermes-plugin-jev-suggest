@@ -3,6 +3,9 @@
 Automatic skill suggestion for Hermes Agent via a decision model on OpenRouter
 (backend locked to OpenRouter; the model slug is selectable).
 
+**Version 0.3.0** — see [CHANGELOG.md](CHANGELOG.md). Rule for this repo:
+behaviour change → minor bump + tag; docs/comments only → no bump.
+
 ## What it does
 
 Runs via the `pre_llm_call` hook, before the LLM tool loop:
