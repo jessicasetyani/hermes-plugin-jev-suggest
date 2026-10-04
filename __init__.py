@@ -946,9 +946,13 @@ def _solar_config_warning(model: str, settings: dict) -> str | None:
             gate = float(settings.get("gate", 0.30))
         except (TypeError, ValueError):
             gate = 0.30
-        return (f"{model} is early-calibration (probed 2026-10-04: no 26-label cap, "
-                f"gate {gate:.2f} starts at Jev 0.30, full-roster accuracy not yet "
-                "measured). Pricing pplx $0.04 vs clef-flash $0.09 vs clef $0.24 per 1M input.")
+        if model == "cloudflare/clef-flash":
+            return (f"{model} runs cool (work mean 0.42, calibrated 2026-10-04): "
+                    f"gate {gate:.2f} above ~0.15 silences real work. Use gate 0.10-0.15; "
+                    "top-1 4/8 — not recommended.")
+        return (f"{model} early-calibration (probed 2026-10-04: no 26-label cap, "
+                f"gate {gate:.2f} at Jev 0.30 separates; pplx top-1 7/8, clef 6/8). "
+                "Pricing pplx $0.04 vs clef-flash $0.09 vs clef $0.24 per 1M input.")
     if model not in SOLAR_MODELS:
         return None
     try:

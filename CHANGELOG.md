@@ -24,9 +24,19 @@ primitives per OpenRouter docs — not yet calibrated):
   pplx usage reported `cost: 0` on probe calls vs clef-flash ~$2.9e-05 and clef
   ~$7.7e-05 per gate call.
 - **Guardrail:** `_solar_config_warning` now warns for `NEW_DECISION_MODELS`
-  on any gate (unprobed — do not inherit Jev `gate 0.30` blindly).
+  (early-calibration — see accuracy findings below).
 - Production stays `typesafe/jev-1.13` until post-allowlist probe sets per-model
   chunk clamp + gate/fits.
+- **Accuracy battery 2026-10-04** (`scripts/new_decoders_accuracy.py`: 8 planted
+  queries × N=148 × 4 models + 15-turn thresholds; raw `accuracy-20261004T020417Z.json`,
+  `thresholds-20261004T020549Z.json`): pplx top-1 7/8 (88%) vs Jev 6/8 (75%),
+  clef 6/8, clef-flash 4/8; recall 7/8 all four. Gate means (work/chitchat):
+  Jev 0.71/0.03, pplx 0.75/0.03 (gate 0.30 separates, better margin than Jev),
+  clef-flash 0.42/0.01 (needs gate ~0.15), clef 0.86/0.02 (separates, runs hot).
+  Latency p50: Jev 0.68s, pplx 1.55s, clef-flash 1.72s, clef 2.35s (max 3.09s —
+  nears 4s hook budget). Spend per 8 turns: Jev $0.0029, pplx $0.0000 (all probe
+  calls cost 0 — launch promo, not guaranteed), clef-flash $0.0062, clef $0.0172.
+  Verdict: pplx viable opt-in alternative, both Clef variants not recommended.
 
 ## 0.3.0 — 2026-09-29
 
