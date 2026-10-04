@@ -1,5 +1,5 @@
 name: jev-suggest
-version: "0.3.0"
+version: "0.4.0"
 description: "Automatic skill suggestion via decision model on OpenRouter (pre_llm_call). Skims the skill roster cheaply, verifies top-3 in detail, injects at most one advisory <skill_relevance> line. OpenRouter-only; model selectable via config. Fail-open; kill switch is mode: off."
 author: "Ali Naga Saputra / Hermes Agent"
 provides_hooks:
@@ -65,7 +65,7 @@ config_schema:
   openrouter_model:
     type: str
     default: "~typesafe/jev-latest"
-    description: "OpenRouter Decisions API model: upstage/solar-decide | ~typesafe/jev-latest | typesafe/jev-1.13"
+    description: "OpenRouter Decisions API model: typesafe/jev-1.13 | ~typesafe/jev-latest | upstage/solar-decide | perplexity/pplx-decider-v1-27b | cloudflare/clef-flash | cloudflare/clef"
   openrouter_base_url:
     type: str
     default: "https://openrouter.ai/api/alpha"

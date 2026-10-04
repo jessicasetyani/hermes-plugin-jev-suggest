@@ -14,7 +14,8 @@ Design notes (ported from jev-skill-router's config pattern, OpenRouter-only):
   setups keep working; config.yaml wins when a ctx is bound.
 - Backend is LOCKED to OpenRouter Decisions API. No TypeSafe-direct, no
   gateway. Only the model slug is selectable, from an allowlist:
-  upstage/solar-decide | ~typesafe/jev-latest | typesafe/jev-1.13.
+  upstage/solar-decide | ~typesafe/jev-latest | typesafe/jev-1.13 |
+  perplexity/pplx-decider-v1-27b | cloudflare/clef-flash | cloudflare/clef.
   Anything else falls back to the default (logged, fail-open).
 - Roster is never modified, system prompt stays byte-stable (prefix caching safe).
 - Fail-open: any error/timeout/missing key returns "" so the turn proceeds.
@@ -47,6 +48,10 @@ ALLOWED_MODELS = frozenset({
     "upstage/solar-decide",
     "~typesafe/jev-latest",
     "typesafe/jev-1.13",
+    "perplexity/pplx-decider-v1-27b",
+    "perplexity/pplx-decider-v1-27b-20261001",
+    "cloudflare/clef-flash",
+    "cloudflare/clef",
 })
 DEFAULT_MODEL = "~typesafe/jev-latest"
 DEFAULT_BASE_URL = "https://openrouter.ai/api/alpha"
@@ -57,6 +62,18 @@ DEFAULT_BASE_URL = "https://openrouter.ai/api/alpha"
 # Jev 400 "at most 10 levels"), so score cannot replace choice for a roster.
 SOLAR_MODELS = frozenset({"upstage/solar-decide"})
 SOLAR_MAX_CHOICES = 25
+# New deciders (added 2026-10-04, v0.4.0): same Decisions API, all three
+# primitives per OpenRouter docs, but choice-cap and gate/fits calibration are
+# UNPROBED — live probe 2026-10-04 returned 404 model-ignored-by-guardrail on
+# all three, so no cap/clamp is applied yet. They run at DEFAULT_CHUNK (240)
+# until a post-allowlist probe sets a per-model clamp. Do not copy Jev's
+# gate 0.30 blindly; treat as untuned.
+NEW_DECISION_MODELS = frozenset({
+    "perplexity/pplx-decider-v1-27b",
+    "perplexity/pplx-decider-v1-27b-20261001",  # canonical dated slug (guardrail stores this)
+    "cloudflare/clef-flash",
+    "cloudflare/clef",
+})
 DEFAULT_CHUNK = 240
 MAX_CHOICES = 255  # the API refuses a Choice with more options
 DEFAULT_LOG_MAX_BYTES = 5 * 1024 * 1024   # rotate the event log at this size
@@ -922,7 +939,16 @@ WARN_SOLAR_GATE_ONCE = {"done": False}
 
 def _solar_config_warning(model: str, settings: dict) -> str | None:
     """Solar cannot inherit Jev's calibration (probe 2026-09-29): its gate scores
-    run ~2.4x lower, so a Jev-tuned gate silences real work turns."""
+    run ~2.4x lower, so a Jev-tuned gate silences real work turns.
+    New deciders (pplx/clef, 2026-10-04) are unprobed: warn on any gate."""
+    if model in NEW_DECISION_MODELS:
+        try:
+            gate = float(settings.get("gate", 0.30))
+        except (TypeError, ValueError):
+            gate = 0.30
+        return (f"{model} is early-calibration (probed 2026-10-04: no 26-label cap, "
+                f"gate {gate:.2f} starts at Jev 0.30, full-roster accuracy not yet "
+                "measured). Pricing pplx $0.04 vs clef-flash $0.09 vs clef $0.24 per 1M input.")
     if model not in SOLAR_MODELS:
         return None
     try:

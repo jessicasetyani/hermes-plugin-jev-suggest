@@ -3,7 +3,7 @@
 Automatic skill suggestion for Hermes Agent via a decision model on OpenRouter
 (backend locked to OpenRouter; the model slug is selectable).
 
-**Version 0.3.0** — see [CHANGELOG.md](CHANGELOG.md). Rule for this repo:
+**Version 0.4.0** — see [CHANGELOG.md](CHANGELOG.md). Rule for this repo:
 behaviour change → minor bump + tag; docs/comments only → no bump.
 
 ## What it does
@@ -37,6 +37,9 @@ this plugin is **locked to the OpenRouter Decisions API** — only
 | `typesafe/jev-1.13` | **Recommended for production.** Pinned: reproducible, thresholds stay valid until you bump it. |
 | `~typesafe/jev-latest` | Plugin default. Alias = always the newest Jev; calibration can drift on every vendor release. |
 | `upstage/solar-decide` | Newcomer (Solar Mini 4). Full `noul`/`choice`/`score` like Jev, returns `confidence`. ~$0.05/M input. **Not interchangeable with Jev** — see [probe report](docs/calibration/SOLAR-PROBE-REPORT.md): 26-label cap incl. `none_of_these` (→ chunk 25), gate scores ~2.4x lower (use `gate: 0.10`, not 0.30), and ~9 calls / 7–10 s / $0.0047 per turn on a 184-skill roster. Sensible only for rosters ≤25 or as a hybrid verify stage. |
+| `perplexity/pplx-decider-v1-27b` | Probed 2026-10-04 (raw `docs/calibration/raw/new-decoders-20261004.txt`). Same Decisions API, all 3 primitives + `confidence`. 262K ctx, ~0.4-0.9s, $0.04/M in (probe calls reported cost 0). **No 26-label cap** — choice 240 OK, so `chunk: 240` stands. Gate work 0.83 vs chit-chat 0.00: Jev `gate 0.30` is a sane start. Needs full-roster accuracy probe before production. |
+| `cloudflare/clef-flash` | Probed 2026-10-04. Same Decisions API + `confidence`. ~0.4-1.1s, $0.09/M in. No cap (240 OK). Gate 0.64 vs 0.00. |
+| `cloudflare/clef` | Probed 2026-10-04. Same Decisions API + `confidence`. ~0.4-1.7s (240-choice slowest), $0.24/M in. No cap (240 OK). Gate 0.83 vs 0.00. Most expensive — needs accuracy win to justify. |
 
 Any other slug falls back to the default (logged, fail-open).
 
@@ -73,7 +76,7 @@ plugins:
         suggest_chars: 4000
         max_skills: 300
         chunk: 240
-        openrouter_model: "typesafe/jev-1.13"   # or ~typesafe/jev-latest / upstage/solar-decide
+        openrouter_model: "typesafe/jev-1.13"   # or ~typesafe/jev-latest / upstage/solar-decide / perplexity/pplx-decider-v1-27b / cloudflare/clef-flash / cloudflare/clef
         openrouter_base_url: "https://openrouter.ai/api/alpha"
         retry_max_wait_s: 2.0
         breaker_threshold: 3

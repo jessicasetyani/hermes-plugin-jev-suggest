@@ -3,6 +3,31 @@
 All notable changes to this plugin. Version bumps follow: **behaviour change → minor**,
 **doc/comment only → no bump**, **breaking config/schema change → major**.
 
+## 0.4.0 — 2026-10-04
+
+Allowlist support for three new Decisions-API models (same endpoint, all three
+primitives per OpenRouter docs — not yet calibrated):
+
+- **Feat:** `perplexity/pplx-decider-v1-27b` ($0.04/M, 262K, ~0.33s),
+  `cloudflare/clef-flash` ($0.09/M, ~0.28s), `cloudflare/clef` ($0.24/M, ~0.47s)
+  added to `ALLOWED_MODELS` + `plugin.yaml` + README. No chunk clamp yet.
+- **Evidence:** live probe 2026-10-04 via `bws run` (`scripts/new_decoders_probe.py`,
+  raw `docs/calibration/raw/new-decoders-20261004.txt`). Pre-guardrail: all three
+  returned `404 model-ignored-by-guardrail` on every call — Hemes Model Policy
+  `22d5f807-…` carried Jev/Span/Solar but none of the three. Post-PATCH (re-GET
+  verified, 36→39 entries; OpenRouter normalized
+  `perplexity/pplx-decider-v1-27b` → `…-20261001`): all three accept
+  noul/choice/score, return `confidence`, and pass choice 26/27/25+none/26+none/
+  100/240 — no Solar-style 26-label cap, so `chunk: 240` stands. Gate separation
+  is Jev-like (work 0.64–0.83 vs chit-chat ~0.00), so Jev `gate 0.30` is a sane
+  starting point, not a blind inherit. Latency 0.4–1.7s (clef 240-choice slowest).
+  pplx usage reported `cost: 0` on probe calls vs clef-flash ~$2.9e-05 and clef
+  ~$7.7e-05 per gate call.
+- **Guardrail:** `_solar_config_warning` now warns for `NEW_DECISION_MODELS`
+  on any gate (unprobed — do not inherit Jev `gate 0.30` blindly).
+- Production stays `typesafe/jev-1.13` until post-allowlist probe sets per-model
+  chunk clamp + gate/fits.
+
 ## 0.3.0 — 2026-09-29
 
 Behaviour changes after the router-parity port, none of which changed the config
