@@ -3,6 +3,39 @@
 All notable changes to this plugin. Version bumps follow: **behaviour change → minor**,
 **doc/comment only → no bump**, **breaking config/schema change → major**.
 
+## 0.6.0 — 2026-10-05
+
+Four-model head-to-head (Jev vs Solar vs pplx vs liquid/d1) + liquid/d1 full
+calibration. Production stays `typesafe/jev-1.13` (pinned); pplx/liquid are
+viable opt-ins, Solar is router-unusable.
+
+- **Evidence — primitives + caps 2026-10-05** (`scripts/probe4-20261005.py` via `bws run`):
+  all four accept noul/choice/score; choice/score return `confidence`, noul
+  does not (all vendors). Choice caps: Jev 240 OK, pplx 240 OK, liquid/d1
+  240 OK (26/27/25+none/26+none/100/240 all OK — no Solar cap, chunk 240
+  stands); Solar 26 OK (13.9s) but 27/26+none/100/240 all 422
+  `26 single-token labels`. Gate work vs chitchat: Jev 0.818/0.003, pplx
+  0.830/0.000, liquid 0.902/0.000 (gate 0.30 separates); Solar 0.091/0.005
+  on long instructions (just_talk 0.906 misfires) but 0.95/0.00 on short —
+  instruction-sensitive, do not trust.
+- **Evidence — accuracy N=148 2026-10-05** (raw
+  `accuracy-20261005T143947Z.json`, 8 planted queries, production shape):
+  pplx top-1 7/8 (88%), Jev 6/8 (75%), liquid 5/8 (62%), Solar 1/8 (12%);
+  recall 7/8 Jev/pplx/liquid, 5/8 Solar. Liquid's 3 misses are verify-stage
+  fits=None rejections (skim found them — top=y), not routing misses.
+  p50 wall: Jev 0.88s, pplx 1.21s, liquid 1.32s, Solar 39.52s (6.6 calls —
+  exceeds 4s hook budget every turn). Cost/8 turns: Jev $0.00294, liquid
+  $0.00201, pplx $0.00000 (promo), Solar $0.00418.
+- **Evidence — thresholds 2026-10-05** (`scripts/thr4-20261005.py`, 3 work + 2 chitchat +
+  1 ambiguous): Jev work 0.73-0.89 vs chit 0.00-0.05, pplx 0.77-0.87 vs
+  0.00-0.01, liquid 0.76-0.96 vs 0.00-0.05, ambiguous 0.29-0.34/0.11/0.29 —
+  gate 0.30 separates work from chitchat on Jev/pplx/liquid.
+- **Change:** liquid/d1 warning upgraded from toy-probe untuned to calibrated
+  viable-opt-in (comment block + `_solar_config_warning`).
+- **Verdict:** pplx best accuracy (7/8) at $0 cost; liquid cheapest billed
+  ($0.0020 vs Jev $0.0029) at 5/8 top-1 / 7/8 recall; Solar router-unusable
+  (12% top-1, 39s p50, 422 over 26 labels).
+
 ## 0.5.0 — 2026-10-05
 
 Allowlist support for `liquid/d1` (Liquid AI System One decision model) as

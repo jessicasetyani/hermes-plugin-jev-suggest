@@ -1,5 +1,5 @@
 name: jev-suggest
-version: "0.5.0"
+version: "0.6.0"
 description: "Automatic skill suggestion via decision model on OpenRouter (pre_llm_call). Skims the skill roster cheaply, verifies top-3 in detail, injects at most one advisory <skill_relevance> line. OpenRouter-only; model selectable via config. Fail-open; kill switch is mode: off."
 author: "Ali Naga Saputra / Hermes Agent"
 provides_hooks:

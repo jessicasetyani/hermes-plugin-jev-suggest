@@ -65,15 +65,16 @@ DEFAULT_BASE_URL = "https://openrouter.ai/api/alpha"
 # Jev 400 "at most 10 levels"), so score cannot replace choice for a roster.
 SOLAR_MODELS = frozenset({"upstage/solar-decide"})
 SOLAR_MAX_CHOICES = 25
-# New deciders (added 2026-10-04, v0.4.0; liquid/d1 added 2026-10-05, v0.5.0):
-# same Decisions API, all three primitives per OpenRouter docs, but choice-cap
-# and gate/fits calibration are UNPROBED — live probe 2026-10-04 returned 404
-# model-ignored-by-guardrail on pplx/clef, so no cap/clamp is applied yet. They
-# run at DEFAULT_CHUNK (240) until a post-allowlist probe sets a per-model
-# clamp. liquid/d1 guardrail-verified 2026-10-05 (Hemes Policy 39->40) + toy
-# probe 200s on noul/choice/score (choice/score return confidence, noul does
-# NOT — like Span-01); chunk cap still UNPROBED, runs at 240. Do not copy
-# Jev's gate 0.30 blindly; treat as untuned.
+# New deciders (added 2026-10-04, v0.4.0; liquid/d1 added 2026-10-05, v0.5.0,
+# calibrated 2026-10-05, v0.6.0): same Decisions API, all three primitives.
+# pplx/clef: live probe 2026-10-04 returned 404 model-ignored-by-guardrail
+# pre-allowlist, then post-allowlist probe set no-cap (chunk 240 stands).
+# liquid/d1: guardrail-verified 2026-10-05 (Hemes Policy 39->40) + full
+# battery 2026-10-05 (primitives OK, choice 26/27/25+none/26+none/100/240 all
+# OK — no Solar cap, chunk 240 stands; gate work 0.71-0.95 vs chitchat 0.00,
+# gate 0.30 separates; accuracy N=148 top-1 5/8, recall 7/8; p50 1.32s).
+# They run at DEFAULT_CHUNK (240). Gate 0.30 is a sane start for pplx/liquid
+# (both separate like Jev), untuned for clef-flash (needs ~0.15).
 NEW_DECISION_MODELS = frozenset({
     "perplexity/pplx-decider-v1-27b",
     "perplexity/pplx-decider-v1-27b-20261001",  # canonical dated slug (guardrail stores this)
@@ -948,17 +949,17 @@ WARN_SOLAR_GATE_ONCE = {"done": False}
 def _solar_config_warning(model: str, settings: dict) -> str | None:
     """Solar cannot inherit Jev's calibration (probe 2026-09-29): its gate scores
     run ~2.4x lower, so a Jev-tuned gate silences real work turns.
-    New deciders (pplx/clef, 2026-10-04; liquid/d1, 2026-10-05) are unprobed:
-    warn on any gate."""
+    New deciders (pplx/clef calibrated 2026-10-04; liquid/d1 2026-10-05):
+    pplx/liquid separate at Jev gate, clef-flash needs ~0.15."""
     if model in ("liquid/d1", "liquid/d1-20260930"):
         try:
             gate = float(settings.get("gate", 0.30))
         except (TypeError, ValueError):
             gate = 0.30
-        return (f"{model} early-calibration (toy probe 2026-10-05 only: noul/choice/score "
-                f"200, noul has no confidence, chunk cap unprobed so chunk 240 stands; "
-                f"gate {gate:.2f} is untuned — do not inherit Jev 0.30 blindly. "
-                "$0.04/M in, $0 out, 66K ctx, single provider Liquid).")
+        return (f"{model} calibrated 2026-10-05 (full battery N=148: no 26-label cap, "
+                f"chunk 240 stands; gate {gate:.2f} at Jev 0.30 separates "
+                "work 0.71-0.95 vs chitchat 0.00; top-1 5/8, recall 7/8; "
+                "p50 1.32s, $0.0020/8 turns — viable opt-in, production stays Jev).")
     if model in NEW_DECISION_MODELS:
         try:
             gate = float(settings.get("gate", 0.30))

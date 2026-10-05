@@ -1,0 +1,836 @@
+{
+  "ts": "2026-10-05T14:35:05.227646+00:00",
+  "roster_pool": 186,
+  "rows": [
+    {
+      "model": "typesafe/jev-1.13",
+      "n": 148,
+      "plant": "backup-restore-verification",
+      "hit": false,
+      "in_top": false,
+      "winner": "systematic-debugging",
+      "wall_s": 0.9,
+      "info": {
+        "gate": 0.655,
+        "chunks": 1,
+        "top": [
+          "microsoft-graph-integration",
+          "systematic-debugging",
+          "sharepoint-helper"
+        ],
+        "best": "systematic-debugging",
+        "fit": 0.55,
+        "probability": 0.77,
+        "confidence": 0.69,
+        "outcome": "suggested",
+        "reason": null
+      },
+      "api_calls": 2,
+      "cost": 0.00036431
+    },
+    {
+      "model": "typesafe/jev-1.13",
+      "n": 148,
+      "plant": "ssl-cert-inspection",
+      "hit": true,
+      "in_top": true,
+      "winner": "ssl-cert-inspection",
+      "wall_s": 0.83,
+      "info": {
+        "gate": 0.706,
+        "chunks": 1,
+        "top": [
+          "ssl-cert-inspection",
+          "email-inbox-triage",
+          "excel-fillable-form-authoring"
+        ],
+        "best": "ssl-cert-inspection",
+        "fit": 0.46,
+        "probability": 0.95,
+        "confidence": 0.93,
+        "outcome": "suggested",
+        "reason": null
+      },
+      "api_calls": 2,
+      "cost": 0.0003662
+    },
+    {
+      "model": "typesafe/jev-1.13",
+      "n": 148,
+      "plant": "security-release-triage",
+      "hit": true,
+      "in_top": true,
+      "winner": "security-release-triage",
+      "wall_s": 0.93,
+      "info": {
+        "gate": 0.713,
+        "chunks": 1,
+        "top": [
+          "security-release-triage",
+          "requesting-code-review",
+          "simplify-code"
+        ],
+        "best": "security-release-triage",
+        "fit": 0.6,
+        "probability": 0.89,
+        "confidence": 0.85,
+        "outcome": "suggested",
+        "reason": null
+      },
+      "api_calls": 2,
+      "cost": 0.00036393
+    },
+    {
+      "model": "typesafe/jev-1.13",
+      "n": 148,
+      "plant": "excel-ledger-reconciliation",
+      "hit": true,
+      "in_top": true,
+      "winner": "excel-ledger-reconciliation",
+      "wall_s": 0.81,
+      "info": {
+        "gate": 0.838,
+        "chunks": 1,
+        "top": [
+          "excel-ledger-reconciliation",
+          "reddit-reading",
+          "healthcare-doctor-vetting"
+        ],
+        "best": "excel-ledger-reconciliation",
+        "fit": 0.85,
+        "probability": 0.99,
+        "confidence": 0.99,
+        "outcome": "suggested",
+        "reason": null
+      },
+      "api_calls": 2,
+      "cost": 0.0003662
+    },
+    {
+      "model": "typesafe/jev-1.13",
+      "n": 148,
+      "plant": "teams-meeting-summarizer",
+      "hit": false,
+      "in_top": true,
+      "winner": "meeting-notes-authoring",
+      "wall_s": 0.81,
+      "info": {
+        "gate": 0.706,
+        "chunks": 1,
+        "top": [
+          "teams-meeting-summarizer",
+          "meeting-notes-authoring",
+          "teams-meeting-pipeline"
+        ],
+        "best": "meeting-notes-authoring",
+        "fit": 0.88,
+        "probability": 0.58,
+        "confidence": 0.43,
+        "outcome": "suggested",
+        "reason": null
+      },
+      "api_calls": 2,
+      "cost": 0.00037183
+    },
+    {
+      "model": "typesafe/jev-1.13",
+      "n": 148,
+      "plant": "obsidian",
+      "hit": true,
+      "in_top": true,
+      "winner": "obsidian",
+      "wall_s": 0.86,
+      "info": {
+        "gate": 0.698,
+        "chunks": 1,
+        "top": [
+          "obsidian",
+          "mermaid-diagrams",
+          "github-auth"
+        ],
+        "best": "obsidian",
+        "fit": 0.39,
+        "probability": 1.0,
+        "confidence": 1.0,
+        "outcome": "suggested",
+        "reason": null
+      },
+      "api_calls": 2,
+      "cost": 0.00036784
+    },
+    {
+      "model": "typesafe/jev-1.13",
+      "n": 148,
+      "plant": "mermaid-diagrams",
+      "hit": true,
+      "in_top": true,
+      "winner": "mermaid-diagrams",
+      "wall_s": 0.88,
+      "info": {
+        "gate": 0.318,
+        "chunks": 1,
+        "top": [
+          "mermaid-diagrams",
+          "excalidraw",
+          "tool-standard-evaluation"
+        ],
+        "best": "mermaid-diagrams",
+        "fit": 0.86,
+        "probability": 1.0,
+        "confidence": 1.0,
+        "outcome": "suggested",
+        "reason": null
+      },
+      "api_calls": 2,
+      "cost": 0.00037275
+    },
+    {
+      "model": "typesafe/jev-1.13",
+      "n": 148,
+      "plant": "jira-program-setup",
+      "hit": true,
+      "in_top": true,
+      "winner": "jira-program-setup",
+      "wall_s": 0.88,
+      "info": {
+        "gate": 0.794,
+        "chunks": 1,
+        "top": [
+          "jira-program-setup",
+          "opencode",
+          "hermes-internals-investigation"
+        ],
+        "best": "jira-program-setup",
+        "fit": 0.77,
+        "probability": 1.0,
+        "confidence": 1.0,
+        "outcome": "suggested",
+        "reason": null
+      },
+      "api_calls": 2,
+      "cost": 0.00036645
+    },
+    {
+      "model": "perplexity/pplx-decider-v1-27b",
+      "n": 148,
+      "plant": "backup-restore-verification",
+      "hit": false,
+      "in_top": false,
+      "winner": "systematic-debugging",
+      "wall_s": 1.3,
+      "info": {
+        "gate": 0.697,
+        "chunks": 1,
+        "top": [
+          "sharepoint-helper",
+          "microsoft-graph-integration",
+          "systematic-debugging"
+        ],
+        "best": "systematic-debugging",
+        "fit": 0.871,
+        "probability": 0.667,
+        "confidence": 0.5554725465682034,
+        "outcome": "suggested",
+        "reason": null
+      },
+      "api_calls": 2,
+      "cost": 0.0
+    },
+    {
+      "model": "perplexity/pplx-decider-v1-27b",
+      "n": 148,
+      "plant": "ssl-cert-inspection",
+      "hit": true,
+      "in_top": true,
+      "winner": "ssl-cert-inspection",
+      "wall_s": 1.25,
+      "info": {
+        "gate": 0.52,
+        "chunks": 1,
+        "top": [
+          "ssl-cert-inspection",
+          "docx",
+          "node-inspect-debugger"
+        ],
+        "best": "ssl-cert-inspection",
+        "fit": 0.834,
+        "probability": 0.959,
+        "confidence": 0.9448141564563329,
+        "outcome": "suggested",
+        "reason": null
+      },
+      "api_calls": 2,
+      "cost": 0.0
+    },
+    {
+      "model": "perplexity/pplx-decider-v1-27b",
+      "n": 148,
+      "plant": "security-release-triage",
+      "hit": true,
+      "in_top": true,
+      "winner": "security-release-triage",
+      "wall_s": 1.13,
+      "info": {
+        "gate": 0.698,
+        "chunks": 1,
+        "top": [
+          "security-release-triage",
+          "sonarqube-onboarding-cb",
+          "ascii-video"
+        ],
+        "best": "security-release-triage",
+        "fit": 0.862,
+        "probability": 0.958,
+        "confidence": 0.94341904980864,
+        "outcome": "suggested",
+        "reason": null
+      },
+      "api_calls": 2,
+      "cost": 0.0
+    },
+    {
+      "model": "perplexity/pplx-decider-v1-27b",
+      "n": 148,
+      "plant": "excel-ledger-reconciliation",
+      "hit": true,
+      "in_top": true,
+      "winner": "excel-ledger-reconciliation",
+      "wall_s": 1.14,
+      "info": {
+        "gate": 0.84,
+        "chunks": 1,
+        "top": [
+          "excel-ledger-reconciliation",
+          "imessage",
+          "evidence-gap-audit"
+        ],
+        "best": "excel-ledger-reconciliation",
+        "fit": 0.964,
+        "probability": 0.926,
+        "confidence": 0.9009689911974023,
+        "outcome": "suggested",
+        "reason": null
+      },
+      "api_calls": 2,
+      "cost": 0.0
+    },
+    {
+      "model": "perplexity/pplx-decider-v1-27b",
+      "n": 148,
+      "plant": "teams-meeting-summarizer",
+      "hit": true,
+      "in_top": true,
+      "winner": "teams-meeting-summarizer",
+      "wall_s": 1.21,
+      "info": {
+        "gate": 0.715,
+        "chunks": 1,
+        "top": [
+          "meeting-notes-authoring",
+          "teams-meeting-summarizer",
+          "hermes-agent-skill-authoring"
+        ],
+        "best": "teams-meeting-summarizer",
+        "fit": 0.942,
+        "probability": 0.47,
+        "confidence": 0.2926875296196596,
+        "outcome": "suggested",
+        "reason": null
+      },
+      "api_calls": 2,
+      "cost": 0.0
+    },
+    {
+      "model": "perplexity/pplx-decider-v1-27b",
+      "n": 148,
+      "plant": "obsidian",
+      "hit": true,
+      "in_top": true,
+      "winner": "obsidian",
+      "wall_s": 1.2,
+      "info": {
+        "gate": 0.665,
+        "chunks": 1,
+        "top": [
+          "obsidian",
+          "notion",
+          "tool-standard-evaluation"
+        ],
+        "best": "obsidian",
+        "fit": 0.93,
+        "probability": 0.986,
+        "confidence": 0.9816853517382901,
+        "outcome": "suggested",
+        "reason": null
+      },
+      "api_calls": 2,
+      "cost": 0.0
+    },
+    {
+      "model": "perplexity/pplx-decider-v1-27b",
+      "n": 148,
+      "plant": "mermaid-diagrams",
+      "hit": true,
+      "in_top": true,
+      "winner": "mermaid-diagrams",
+      "wall_s": 1.21,
+      "info": {
+        "gate": 0.597,
+        "chunks": 1,
+        "top": [
+          "mermaid-diagrams",
+          "excalidraw",
+          "apple-notes"
+        ],
+        "best": "mermaid-diagrams",
+        "fit": 0.967,
+        "probability": 0.931,
+        "confidence": 0.9084674826012759,
+        "outcome": "suggested",
+        "reason": null
+      },
+      "api_calls": 2,
+      "cost": 0.0
+    },
+    {
+      "model": "perplexity/pplx-decider-v1-27b",
+      "n": 148,
+      "plant": "jira-program-setup",
+      "hit": true,
+      "in_top": true,
+      "winner": "jira-program-setup",
+      "wall_s": 1.18,
+      "info": {
+        "gate": 0.73,
+        "chunks": 1,
+        "top": [
+          "jira-program-setup",
+          "hermes-plugin-authoring",
+          "hermes-agent"
+        ],
+        "best": "jira-program-setup",
+        "fit": 0.857,
+        "probability": 0.987,
+        "confidence": 0.9828542639488062,
+        "outcome": "suggested",
+        "reason": null
+      },
+      "api_calls": 2,
+      "cost": 0.0
+    },
+    {
+      "model": "liquid/d1",
+      "n": 148,
+      "plant": "backup-restore-verification",
+      "hit": false,
+      "in_top": false,
+      "winner": "",
+      "wall_s": 1.37,
+      "info": {
+        "gate": 0.712,
+        "chunks": 1,
+        "top": [
+          "sharepoint-helper",
+          "microsoft-graph-integration",
+          "microsoft-365-integration"
+        ],
+        "outcome": "silent",
+        "reason": "none_selected"
+      },
+      "api_calls": 2,
+      "cost": 0.00025308
+    },
+    {
+      "model": "liquid/d1",
+      "n": 148,
+      "plant": "ssl-cert-inspection",
+      "hit": true,
+      "in_top": true,
+      "winner": "ssl-cert-inspection",
+      "wall_s": 1.2,
+      "info": {
+        "gate": 0.719,
+        "chunks": 1,
+        "top": [
+          "ssl-cert-inspection",
+          "security-risk-assessment",
+          "weekly-review-planning"
+        ],
+        "best": "ssl-cert-inspection",
+        "fit": 0.915,
+        "probability": 0.481,
+        "confidence": 0.30853766005679156,
+        "outcome": "suggested",
+        "reason": null
+      },
+      "api_calls": 2,
+      "cost": 0.00024852
+    },
+    {
+      "model": "liquid/d1",
+      "n": 148,
+      "plant": "security-release-triage",
+      "hit": true,
+      "in_top": true,
+      "winner": "security-release-triage",
+      "wall_s": 1.51,
+      "info": {
+        "gate": 0.708,
+        "chunks": 1,
+        "top": [
+          "security-release-triage",
+          "requesting-code-review",
+          "simplify-code"
+        ],
+        "best": "security-release-triage",
+        "fit": 0.777,
+        "probability": 0.589,
+        "confidence": 0.45151627666232974,
+        "outcome": "suggested",
+        "reason": null
+      },
+      "api_calls": 2,
+      "cost": 0.00024956
+    },
+    {
+      "model": "liquid/d1",
+      "n": 148,
+      "plant": "excel-ledger-reconciliation",
+      "hit": true,
+      "in_top": true,
+      "winner": "excel-ledger-reconciliation",
+      "wall_s": 1.22,
+      "info": {
+        "gate": 0.95,
+        "chunks": 1,
+        "top": [
+          "excel-ledger-reconciliation",
+          "google-workspace",
+          "image-text-extraction"
+        ],
+        "best": "excel-ledger-reconciliation",
+        "fit": 0.993,
+        "probability": 0.911,
+        "confidence": 0.88194562506484,
+        "outcome": "suggested",
+        "reason": null
+      },
+      "api_calls": 2,
+      "cost": 0.00024996
+    },
+    {
+      "model": "liquid/d1",
+      "n": 148,
+      "plant": "teams-meeting-summarizer",
+      "hit": false,
+      "in_top": true,
+      "winner": "",
+      "wall_s": 1.32,
+      "info": {
+        "gate": 0.678,
+        "chunks": 1,
+        "top": [
+          "teams-meeting-pipeline",
+          "meeting-notes-authoring",
+          "teams-meeting-summarizer"
+        ],
+        "outcome": "silent",
+        "reason": "none_selected"
+      },
+      "api_calls": 2,
+      "cost": 0.0002548
+    },
+    {
+      "model": "liquid/d1",
+      "n": 148,
+      "plant": "obsidian",
+      "hit": false,
+      "in_top": true,
+      "winner": "",
+      "wall_s": 1.3,
+      "info": {
+        "gate": 0.731,
+        "chunks": 1,
+        "top": [
+          "obsidian",
+          "meeting-notes-authoring",
+          "meeting-action-items"
+        ],
+        "outcome": "silent",
+        "reason": "none_selected"
+      },
+      "api_calls": 2,
+      "cost": 0.00024964
+    },
+    {
+      "model": "liquid/d1",
+      "n": 148,
+      "plant": "mermaid-diagrams",
+      "hit": true,
+      "in_top": true,
+      "winner": "mermaid-diagrams",
+      "wall_s": 1.5,
+      "info": {
+        "gate": 0.727,
+        "chunks": 1,
+        "top": [
+          "mermaid-diagrams",
+          "excalidraw",
+          "rss-feeds"
+        ],
+        "best": "mermaid-diagrams",
+        "fit": 0.974,
+        "probability": 0.986,
+        "confidence": 0.9813871910154782,
+        "outcome": "suggested",
+        "reason": null
+      },
+      "api_calls": 2,
+      "cost": 0.00025204
+    },
+    {
+      "model": "liquid/d1",
+      "n": 148,
+      "plant": "jira-program-setup",
+      "hit": true,
+      "in_top": true,
+      "winner": "jira-program-setup",
+      "wall_s": 1.25,
+      "info": {
+        "gate": 0.755,
+        "chunks": 1,
+        "top": [
+          "jira-program-setup",
+          "executive-progress-reporting",
+          "adins-competency-framework"
+        ],
+        "best": "jira-program-setup",
+        "fit": 0.755,
+        "probability": 0.997,
+        "confidence": 0.9962398551193029,
+        "outcome": "suggested",
+        "reason": null
+      },
+      "api_calls": 2,
+      "cost": 0.00025212
+    },
+    {
+      "model": "upstage/solar-decide",
+      "n": 148,
+      "plant": "backup-restore-verification",
+      "hit": false,
+      "in_top": false,
+      "winner": "",
+      "wall_s": 43.71,
+      "info": {
+        "gate": 0.964,
+        "chunks": 6,
+        "top": [
+          "sharepoint-helper",
+          "hermes-a2a-bridge",
+          "github-code-review"
+        ],
+        "outcome": "silent",
+        "reason": "none_selected"
+      },
+      "api_calls": 7,
+      "cost": 0.0005643
+    },
+    {
+      "model": "upstage/solar-decide",
+      "n": 148,
+      "plant": "ssl-cert-inspection",
+      "hit": false,
+      "in_top": false,
+      "winner": "",
+      "wall_s": 34.73,
+      "info": {
+        "gate": 0.912,
+        "chunks": 6,
+        "top": [
+          "security-risk-assessment",
+          "popular-web-designs",
+          "blogwatcher"
+        ],
+        "outcome": "silent",
+        "reason": "none_selected"
+      },
+      "api_calls": 7,
+      "cost": 0.0005618
+    },
+    {
+      "model": "upstage/solar-decide",
+      "n": 148,
+      "plant": "security-release-triage",
+      "hit": true,
+      "in_top": true,
+      "winner": "security-release-triage",
+      "wall_s": 41.61,
+      "info": {
+        "gate": 0.975,
+        "chunks": 6,
+        "top": [
+          "security-release-triage",
+          "github-repo-management",
+          "imessage"
+        ],
+        "best": "security-release-triage",
+        "fit": 0.448,
+        "probability": 0.963,
+        "confidence": 0.867688,
+        "outcome": "suggested",
+        "reason": null
+      },
+      "api_calls": 7,
+      "cost": 0.00057215
+    },
+    {
+      "model": "upstage/solar-decide",
+      "n": 148,
+      "plant": "excel-ledger-reconciliation",
+      "hit": false,
+      "in_top": true,
+      "winner": "",
+      "wall_s": 4.33,
+      "info": {
+        "gate": 0.114,
+        "chunks": 6,
+        "top": [
+          "excel-ledger-reconciliation",
+          "gif-search",
+          "tool-priority"
+        ],
+        "outcome": "silent",
+        "reason": "gate"
+      },
+      "api_calls": 6,
+      "cost": 0.00045005
+    },
+    {
+      "model": "upstage/solar-decide",
+      "n": 148,
+      "plant": "teams-meeting-summarizer",
+      "hit": false,
+      "in_top": false,
+      "winner": "",
+      "wall_s": 39.52,
+      "info": {
+        "gate": 0.508,
+        "chunks": 6,
+        "top": [
+          "youtube-content",
+          "hermes-plugin-authoring",
+          "xurl"
+        ],
+        "outcome": "silent",
+        "reason": "none_selected"
+      },
+      "api_calls": 7,
+      "cost": 0.000562
+    },
+    {
+      "model": "upstage/solar-decide",
+      "n": 148,
+      "plant": "obsidian",
+      "hit": false,
+      "in_top": true,
+      "winner": "",
+      "wall_s": 48.68,
+      "info": {
+        "gate": 0.76,
+        "chunks": 6,
+        "top": [
+          "obsidian",
+          "meeting-action-items",
+          "meeting-notes-authoring"
+        ],
+        "best": "obsidian",
+        "fit": 0.018,
+        "probability": 0.998,
+        "confidence": 0.987349,
+        "outcome": "silent",
+        "reason": "fits"
+      },
+      "api_calls": 7,
+      "cost": 0.0005657
+    },
+    {
+      "model": "upstage/solar-decide",
+      "n": 148,
+      "plant": "mermaid-diagrams",
+      "hit": false,
+      "in_top": true,
+      "winner": "",
+      "wall_s": 22.83,
+      "info": {
+        "gate": 0.151,
+        "chunks": 6,
+        "top": [
+          "mermaid-diagrams",
+          "excalidraw",
+          "node-inspect-debugger"
+        ],
+        "outcome": "silent",
+        "reason": "gate"
+      },
+      "api_calls": 6,
+      "cost": 0.00045135
+    },
+    {
+      "model": "upstage/solar-decide",
+      "n": 148,
+      "plant": "jira-program-setup",
+      "hit": false,
+      "in_top": true,
+      "winner": "",
+      "wall_s": 20.09,
+      "info": {
+        "gate": 0.152,
+        "chunks": 6,
+        "top": [
+          "jira-program-setup",
+          "base-dashboard",
+          "sonarqplaceholder"
+        ],
+        "outcome": "silent",
+        "reason": "gate"
+      },
+      "api_calls": 6,
+      "cost": 0.0004506
+    }
+  ],
+  "summary": [
+    {
+      "model": "typesafe/jev-1.13",
+      "n": 148,
+      "top1": 0.75,
+      "recall": 0.875,
+      "p50_wall_s": 0.88,
+      "mean_calls": 2.0
+    },
+    {
+      "model": "perplexity/pplx-decider-v1-27b",
+      "n": 148,
+      "top1": 0.875,
+      "recall": 0.875,
+      "p50_wall_s": 1.21,
+      "mean_calls": 2.0
+    },
+    {
+      "model": "liquid/d1",
+      "n": 148,
+      "top1": 0.625,
+      "recall": 0.875,
+      "p50_wall_s": 1.32,
+      "mean_calls": 2.0
+    },
+    {
+      "model": "upstage/solar-decide",
+      "n": 148,
+      "top1": 0.125,
+      "recall": 0.625,
+      "p50_wall_s": 39.52,
+      "mean_calls": 6.6
+    }
+  ]
+}
