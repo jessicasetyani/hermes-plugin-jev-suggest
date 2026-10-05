@@ -3,6 +3,24 @@
 All notable changes to this plugin. Version bumps follow: **behaviour change → minor**,
 **doc/comment only → no bump**, **breaking config/schema change → major**.
 
+## 0.5.0 — 2026-10-05
+
+Allowlist support for `liquid/d1` (Liquid AI System One decision model) as
+opt-in only — the configured model (`perplexity/pplx-decider-v1-27b`) is untouched:
+
+- **Feat:** `liquid/d1` + canonical `liquid/d1-20260930` added to
+  `ALLOWED_MODELS` + `NEW_DECISION_MODELS` + `plugin.yaml` + README, with a
+  dedicated early-calibration `status` warning. Unknown slugs still fall back
+  to the default (fail-open).
+- **Evidence:** Hemes Model Policy re-GET verified 39→40 with
+  `liquid/d1-20260930`; toy probe 2026-10-05 via `bws run` 200 on
+  noul/choice/score (choice billing 0.87/conf 0.81, score 1.12/conf 0.67,
+  noul urgency 0.94 with NO confidence — Span-01-style; $0.000002–0.000012/call,
+  0.44–0.57s). Chunk cap UNPROBED — runs at `chunk: 240` until the
+  26/27/100/240 series passes; gate 0.30 untuned.
+- Production stays on the current Perplexity setting until a full
+  chunk-cap + accuracy/threshold battery passes.
+
 ## 0.4.0 — 2026-10-04
 
 Allowlist support for three new Decisions-API models (same endpoint, all three
