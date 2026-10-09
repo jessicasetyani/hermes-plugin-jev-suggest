@@ -954,8 +954,8 @@ WARN_SOLAR_GATE_ONCE = {"done": False}
 def _solar_config_warning(model: str, settings: dict) -> str | None:
     """Solar cannot inherit Jev's calibration (probe 2026-09-29): its gate scores
     run ~2.4x lower, so a Jev-tuned gate silences real work turns.
-    New deciders (pplx/clef calibrated 2026-10-04; liquid/d1 2026-10-05):
-    pplx/liquid separate at Jev gate, clef-flash needs ~0.15."""
+    New deciders: pplx-decider v1.1 calibrated 2026-10-09 (separates at Jev gate,
+    wider margin than Jev); liquid/d1 calibrated 2026-10-05; clef-flash needs ~0.15."""
     if model in ("liquid/d1", "liquid/d1-20260930"):
         try:
             gate = float(settings.get("gate", 0.30))
@@ -974,9 +974,18 @@ def _solar_config_warning(model: str, settings: dict) -> str | None:
             return (f"{model} runs cool (work mean 0.42, calibrated 2026-10-04): "
                     f"gate {gate:.2f} above ~0.15 silences real work. Use gate 0.10-0.15; "
                     "top-1 4/8 — not recommended.")
-        return (f"{model} early-calibration (probed 2026-10-04: no 26-label cap, "
-                f"gate {gate:.2f} at Jev 0.30 separates; pplx top-1 7/8, clef 6/8). "
-                "Pricing pplx $0.04 vs clef-flash $0.09 vs clef $0.24 per 1M input.")
+        if model in ("perplexity/pplx-decider-v1.1-27b",
+                     "perplexity/pplx-decider-v1.1-27b-20261006"):
+            return (f"{model} calibrated 2026-10-09 (N=148, same-session vs Jev: top-1 6/8 "
+                    f"= Jev 6/8, recall 7/8 = Jev 7/8 — no accuracy edge over Jev). "
+                    f"Gate {gate:.2f} separates work min 0.553 vs ambiguous max 0.044 and "
+                    "chit-chat max 0.015: wider margin than Jev at the same gate. Fits on real "
+                    "work runs 0.92-1.00, so a fits 0.5 filter silences nothing. p50 2.14s vs "
+                    "Jev 1.23s; $0.00018/turn at list ($0.02/M in, $0 out; billed $0 during the "
+                    "run — treat as promo). Watch reason=none_selected: 1 of 7 work turns was "
+                    "vetoed by none_of_these on a single-chunk roster.")
+        return (f"{model} early-calibration (probed 2026-10-04: no 26-label cap; "
+                f"clef top-1 6/8). Pricing clef-flash $0.09 vs clef $0.24 per 1M input.")
     if model not in SOLAR_MODELS:
         return None
     try:

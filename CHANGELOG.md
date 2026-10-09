@@ -20,11 +20,28 @@ Swap the Perplexity decider to the new checkpoint: **v1 retired, v1.1 replaces i
   allowlist table and version rows updated; version → 0.7.0.
 - **⚠️ Calibration debt:** every pplx number in this repo (accuracy N=148 top-1
   7/8, threshold sweep, gate 0.30) was measured on **v1**. Calibration does not
-  transfer across checkpoints, so v1.1 ships as an **uncalibrated opt-in** until
-  a fresh N=148 + threshold run lands.
-- **Blocking dependency (outside this repo):** `perplexity/pplx-decider-v1.1-27b` is not yet on the Hemes
-  Model Policy allowlist — a call returns `404 model-ignored-by-guardrail` until
-  the exact slug is added. Allowlisting is a separate privileged write.
+  transfer across checkpoints, so v1.1 shipped as an **uncalibrated opt-in** until the
+  2026-10-09 run recorded below.
+- **Guardrail (resolved 2026-10-09):** the slug was added to Hemes Model Policy and
+  verified — the policy stores the canonical `perplexity/pplx-decider-v1.1-27b-20261006`
+  and live calls return 200.
+- **Calibration 2026-10-09** (raw `accuracy-20261009T154748Z.json`,
+  `thresholds-20261009T154831Z.json`, harness `scripts/acc-v11-20261009.py`):
+  N=148 same-session vs Jev — **top-1 6/8 = Jev 6/8, recall 7/8 = Jev 7/8**. v1 had
+  scored 7/8; the lost pick is `teams-meeting-summarizer` → `meeting-notes-authoring`
+  (shortlist recall intact, so a verify-stage confusion, not a routing miss). Gate
+  separation is **wider than Jev's**: work min 0.553 / mean 0.832 vs ambiguous
+  max 0.044 and chit-chat max 0.015 — `gate 0.35` validated with ~0.2 margin.
+  Work-turn `fit` 0.92–1.00, so `fits 0.5` silences nothing. p50 wall 2.14s vs
+  Jev 1.23s. Cost **$0.00018/turn at list** (8.9K in / 8 out, billed $0 on promo)
+  vs Jev's measured $0.00044/turn. Caveat: 1 of 7 work turns returned
+  `reason=none_selected` — `none_of_these` ≥0.50 vetoed the single 240-skill chunk.
+- **Verdict:** v1.1 is viable and ~2.5x cheaper per turn at list, but it does **not**
+  beat Jev on accuracy — the v1-era "pplx is more accurate than Jev" case does not
+  survive the checkpoint. The trade is now cost against ~0.9s of extra latency.
+  `gate 0.35` / `fits 0.5` remain correct as configured; no config change needed.
+- **Change (no bump, doc/comment only):** `_solar_config_warning` no longer prints
+  the pre-v1.1 recommendation text (`pplx top-1 7/8`, `$0.04/M`).
 
 ## 0.6.0 — 2026-10-05
 
