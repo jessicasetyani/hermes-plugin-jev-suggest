@@ -15,7 +15,7 @@ Design notes (ported from jev-skill-router's config pattern, OpenRouter-only):
 - Backend is LOCKED to OpenRouter Decisions API. No TypeSafe-direct, no
   gateway. Only the model slug is selectable, from an allowlist:
   upstage/solar-decide | ~typesafe/jev-latest | typesafe/jev-1.13 |
-  perplexity/pplx-decider-v1-27b | cloudflare/clef-flash | cloudflare/clef |
+  perplexity/pplx-decider-v1.1-27b | cloudflare/clef-flash | cloudflare/clef |
   liquid/d1 | liquid/d1-20260930.
   Anything else falls back to the default (logged, fail-open).
 - Roster is never modified, system prompt stays byte-stable (prefix caching safe).
@@ -49,8 +49,8 @@ ALLOWED_MODELS = frozenset({
     "upstage/solar-decide",
     "~typesafe/jev-latest",
     "typesafe/jev-1.13",
-    "perplexity/pplx-decider-v1-27b",
-    "perplexity/pplx-decider-v1-27b-20261001",
+    "perplexity/pplx-decider-v1.1-27b",
+    "perplexity/pplx-decider-v1.1-27b-20261006",  # canonical dated slug (guardrail stores this)
     "cloudflare/clef-flash",
     "cloudflare/clef",
     "liquid/d1",
@@ -69,6 +69,11 @@ SOLAR_MAX_CHOICES = 25
 # calibrated 2026-10-05, v0.6.0): same Decisions API, all three primitives.
 # pplx/clef: live probe 2026-10-04 returned 404 model-ignored-by-guardrail
 # pre-allowlist, then post-allowlist probe set no-cap (chunk 240 stands).
+# pplx v1 RETIRED (verified 2026-10-09: v1 + its dated slug both return
+# 404 "No endpoints found"). Replaced by pplx-decider-v1.1-27b (checkpoint
+# released 2026-10-07, canonical -20261006). v1.1 is UNCALIBRATED here: the
+# v1 accuracy N=148 + threshold sweep do NOT transfer across checkpoints.
+# Treat gate 0.30 as a placeholder until a v1.1 run exists.
 # liquid/d1: guardrail-verified 2026-10-05 (Hemes Policy 39->40) + full
 # battery 2026-10-05 (primitives OK, choice 26/27/25+none/26+none/100/240 all
 # OK — no Solar cap, chunk 240 stands; gate work 0.71-0.95 vs chitchat 0.00,
@@ -76,8 +81,8 @@ SOLAR_MAX_CHOICES = 25
 # They run at DEFAULT_CHUNK (240). Gate 0.30 is a sane start for pplx/liquid
 # (both separate like Jev), untuned for clef-flash (needs ~0.15).
 NEW_DECISION_MODELS = frozenset({
-    "perplexity/pplx-decider-v1-27b",
-    "perplexity/pplx-decider-v1-27b-20261001",  # canonical dated slug (guardrail stores this)
+    "perplexity/pplx-decider-v1.1-27b",
+    "perplexity/pplx-decider-v1.1-27b-20261006",  # canonical dated slug (guardrail stores this)
     "cloudflare/clef-flash",
     "cloudflare/clef",
     "liquid/d1",

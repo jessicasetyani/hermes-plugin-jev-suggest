@@ -3,6 +3,29 @@
 All notable changes to this plugin. Version bumps follow: **behaviour change → minor**,
 **doc/comment only → no bump**, **breaking config/schema change → major**.
 
+## 0.7.0 — 2026-10-09
+
+Swap the Perplexity decider to the new checkpoint: **v1 retired, v1.1 replaces it.**
+
+- **Evidence — v1 is gone (live probe 2026-10-09, Decisions API via `bws run`):**
+  `perplexity/pplx-decider-v1-27b` and its dated canonical `perplexity/pplx-decider-v1-27b-20261001` both return
+  `404 No endpoints found` — not a guardrail message, so no provider endpoint
+  exists at all. No deprecation window was published.
+- **Evidence — v1.1 is the successor:** OpenRouter model page `Decider V1.1 27B`
+  (released 2026-10-07, canonical `perplexity/pplx-decider-v1.1-27b-20261006`, 262K ctx, $0.02/M input · $0 output,
+  `deprecationDate: null`). The Decisions API resolves 1 endpoint for both the
+  alias and the dated slug.
+- **Change:** `ALLOWED_MODELS` / `NEW_DECISION_MODELS` carry `perplexity/pplx-decider-v1.1-27b` +
+  `perplexity/pplx-decider-v1.1-27b-20261006` instead of the retired v1 pair; `plugin.yaml` description, README
+  allowlist table and version rows updated; version → 0.7.0.
+- **⚠️ Calibration debt:** every pplx number in this repo (accuracy N=148 top-1
+  7/8, threshold sweep, gate 0.30) was measured on **v1**. Calibration does not
+  transfer across checkpoints, so v1.1 ships as an **uncalibrated opt-in** until
+  a fresh N=148 + threshold run lands.
+- **Blocking dependency (outside this repo):** `perplexity/pplx-decider-v1.1-27b` is not yet on the Hemes
+  Model Policy allowlist — a call returns `404 model-ignored-by-guardrail` until
+  the exact slug is added. Allowlisting is a separate privileged write.
+
 ## 0.6.0 — 2026-10-05
 
 Four-model head-to-head (Jev vs Solar vs pplx vs liquid/d1) + liquid/d1 full

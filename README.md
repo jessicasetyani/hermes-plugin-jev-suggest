@@ -3,7 +3,7 @@
 Automatic skill suggestion for Hermes Agent via a decision model on OpenRouter
 (backend locked to OpenRouter; the model slug is selectable).
 
-**Version 0.6.0** — see [CHANGELOG.md](CHANGELOG.md). Rule for this repo:
+**Version 0.7.0** — see [CHANGELOG.md](CHANGELOG.md). Rule for this repo:
 behaviour change → minor bump + tag; docs/comments only → no bump.
 
 ## What it does
@@ -37,7 +37,7 @@ this plugin is **locked to the OpenRouter Decisions API** — only
 | `typesafe/jev-1.13` | **Recommended for production.** Pinned: reproducible, thresholds stay valid until you bump it. |
 | `~typesafe/jev-latest` | Plugin default. Alias = always the newest Jev; calibration can drift on every vendor release. |
 | `upstage/solar-decide` | Newcomer (Solar Mini 4). Full `noul`/`choice`/`score` like Jev, returns `confidence`. ~$0.05/M input. **Not interchangeable with Jev** — see [probe report](docs/calibration/SOLAR-PROBE-REPORT.md): 26-label cap incl. `none_of_these` (→ chunk 25), gate scores ~2.4x lower (use `gate: 0.10`, not 0.30), and ~9 calls / 7–10 s / $0.0047 per turn on a 184-skill roster. Sensible only for rosters ≤25 or as a hybrid verify stage. |
-| `perplexity/pplx-decider-v1-27b` | **Calibrated 2026-10-04** (raw `accuracy-20261004T020417Z.json`, `thresholds-20261004T020549Z.json`). Same Decisions API + `confidence`. 262K ctx. **No 26-label cap** — choice 240 OK, `chunk: 240` stands. Accuracy N=148: **top-1 7/8 (88%) vs Jev 6/8 (75%)**, recall 7/8 both. Gate work 0.52–0.84 (mean 0.75) vs chit-chat ≤0.07: Jev `gate 0.30` separates perfectly with better margin than Jev. Latency p50 1.55s / max 2.39s (Jev 0.68/0.90) — inside 4s hook budget at 2x cost in time. **Probe spend $0.00 on all 23 calls** (list $0.04/M — treat as launch promo, not guaranteed). Viable opt-in alternative; production stays Jev until longer soak. |
+| `perplexity/pplx-decider-v1.1-27b` | **Opt-in — UNCALIBRATED on v1.1.** v1.1 checkpoint (released 2026-10-07, canonical `perplexity/pplx-decider-v1.1-27b-20261006`, 262K ctx, $0.02/M in · $0 out) **replaces** `perplexity/pplx-decider-v1-27b`, which is **retired** — verified 2026-10-09: v1 and its dated slug both return 404 `No endpoints found`. Same Decisions API + `confidence`. **No 26-label cap** — choice 240 OK, `chunk: 240` stands. ⚠️ **The v1 calibration does not carry over:** thresholds and accuracy are checkpoint-specific, so re-run the N=148 + threshold sweep against v1.1 before trusting `gate`/`fits`. v1 reference numbers (raw `accuracy-20261004T020417Z.json`, `thresholds-20261004T020549Z.json`): top-1 7/8 (88%) vs Jev 6/8, gate work 0.52–0.84 vs chit-chat ≤0.07, p50 1.55s, probe spend $0.00 (promo). |
 | `cloudflare/clef-flash` | **Calibrated 2026-10-04 — not recommended.** No cap (240 OK) + `confidence`, but top-1 **4/8 (50%)** vs Jev 75%; 2 of 4 misses are gate artifacts (work scores 0.14/0.29 fall under Jev `gate 0.30` — needs `gate ~0.15`, Solar-style). Latency p50 1.72s, spend ~2x Jev ($0.0062/8 turns vs $0.0029). |
 | `cloudflare/clef` | **Calibrated 2026-10-04 — not recommended.** No cap (240 OK) + `confidence`, top-1 6/8 = Jev, gate separates (work 0.69–0.95), but latency p50 2.35s / max 3.09s (nears 4s budget) and spend **~6x Jev** ($0.0172/8 turns). No accuracy win to justify it. |
 | `liquid/d1` | **Calibrated 2026-10-05 — viable opt-in.** Same Decisions API; `choice`/`score` return `confidence`, `noul` does not (all vendors). $0.04/M in, $0 out, 66K ctx, single provider Liquid. **No 26-label cap** — 26/27/25+none/26+none/100/240 all OK, `chunk: 240` stands. Accuracy N=148: top-1 **5/8 (62%)**, recall **7/8 (88%)** — misses are verify-stage fits rejections, skim found them. Gate work 0.71–0.95 vs chitchat 0.00: Jev `gate 0.30` separates. Latency p50 1.32s (inside 4s budget), cost **$0.0020/8 turns** (cheapest billed — Jev $0.0029, pplx $0.00 promo). Raw `accuracy-20261005T143947Z.json`. |
@@ -77,7 +77,7 @@ plugins:
         suggest_chars: 4000
         max_skills: 300
         chunk: 240
-        openrouter_model: "typesafe/jev-1.13"   # or ~typesafe/jev-latest / upstage/solar-decide / perplexity/pplx-decider-v1-27b / cloudflare/clef-flash / cloudflare/clef / liquid/d1
+        openrouter_model: "typesafe/jev-1.13"   # or ~typesafe/jev-latest / upstage/solar-decide / perplexity/pplx-decider-v1.1-27b / cloudflare/clef-flash / cloudflare/clef / liquid/d1
         openrouter_base_url: "https://openrouter.ai/api/alpha"
         retry_max_wait_s: 2.0
         breaker_threshold: 3
@@ -104,7 +104,7 @@ Full key list with defaults (`plugin.yaml` `config_schema` is authoritative):
 | `breaker_cooldown_s` | `120` | Silence window after the breaker opens |
 | `min_interval_s` | `0.25` | Minimum gap between outgoing calls, per process |
 | `cache_seconds` | `300` | Identical calls answered from cache per window |
-| `openrouter_model` | `~typesafe/jev-latest` | Allowlist: `upstage/solar-decide` / `~typesafe/jev-latest` / `typesafe/jev-1.13` / `perplexity/pplx-decider-v1-27b` / `cloudflare/clef-flash` / `cloudflare/clef` / `liquid/d1` |
+| `openrouter_model` | `~typesafe/jev-latest` | Allowlist: `upstage/solar-decide` / `~typesafe/jev-latest` / `typesafe/jev-1.13` / `perplexity/pplx-decider-v1.1-27b` / `cloudflare/clef-flash` / `cloudflare/clef` / `liquid/d1` |
 | `openrouter_base_url` | `https://openrouter.ai/api/alpha` | Base URL (endpoint = base + `/decisions`) |
 | `log_enabled` | `true` | Write the event log at all (`false` = plugin runs, nothing recorded) |
 | `log_max_bytes` | `5242880` | Rotate the event log at this size; `0` = never rotate |
