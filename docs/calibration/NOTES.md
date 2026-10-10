@@ -78,3 +78,13 @@ fast). Lesson: the earlier 2-call probe (3 options) was necessary but
 insufficient; production-shape (148-choice) E2E caught both the Solar 422
 and this variance. Default `timeout_s` lowered 10.0 → 4.0 (router parity)
 so slow turns fail open within hook budget instead of blocking 10s+.
+
+## Harness path (2026-10-11)
+
+`solar_probe.py` loads the plugin by path and **defaults to the installed copy**
+(`~/.hermes/plugins/jev-suggest/__init__.py`), not the checkout it lives in. A branch whose
+allowlist carries extra slugs therefore looks unchanged to the harness, and an
+unallowlisted slug falls back to the default model *silently* while the output labels it a
+candidate. Set `JEV_SUGGEST_PLUGIN` to the checkout's `__init__.py` when probing a branch
+(`scripts/intake-20261011.py` does this itself; the shell value is lost under
+`bws run --no-inherit-env`, so the runner must set it in-process).

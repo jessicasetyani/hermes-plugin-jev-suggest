@@ -3,6 +3,30 @@
 All notable changes to this plugin. Version bumps follow: **behaviour change → minor**,
 **doc/comment only → no bump**, **breaking config/schema change → major**.
 
+## 0.8.0 — 2026-10-11
+
+**New-decider intake: 6 probed, 1 adopted — `inception/mercury-decide`.**
+
+- **Adopted:** `inception/mercury-decide` (+ dated canonical `-20260930`). Ties the
+  production model on accuracy (N=148, 8 planted: top-1 75%, shortlist recall 88% —
+  identical to `typesafe/jev-1.13` measured in the same run) and does it **on Jev's gate
+  scale**, so no threshold re-tuning: work-gate floor 0.529 vs Jev's 0.412, chit-chat
+  ceiling 0.002 vs Jev's 0.050. Cheapest decision model measured (2.8e-05/call, $0.02/M
+  input). Opt-in only — **the production default is unchanged**, because a tie does not
+  justify moving a default and it is ~0.7s slower (1.81s vs 1.11s p50) against a 4s hook.
+- **Rejected (measured, not preference):** `openai/gpt-6-luna-decisions` (top-1 25%,
+  work-gate floor 0.010, 2 api_error rows), `cloudflare/clef-omni` (38%, floor 0.068,
+  costliest at 2.5e-04/call), `microsoft/microsoft-decision-1` (50%, floor 0.106, 32K ctx),
+  `nace-ai/drex-v1.5` (50%, needs gate ~0.20, 2.50s p50), `upstage/solar-decide-flash`
+  (26-label Choice cap → 422 at 27/240/241, i.e. chunk 25 and ~6 calls/turn).
+- **Harness fix:** `solar_probe.py` hardcoded the *installed* plugin path, so a run from a
+  checkout measured the install — and an unallowlisted slug silently fell back to the
+  default model under the candidate's name. `PLUGIN` now honours `JEV_SUGGEST_PLUGIN`
+  (default unchanged); `scripts/intake-20261011.py` sets it to its own checkout and asserts
+  every slug is in the loaded module's allowlist.
+- **Report:** `docs/calibration/INTAKE-20261011.md`. Raw:
+  `docs/calibration/raw/{accuracy,thresholds}-20261010T23*.json`.
+
 ## 0.7.0 — 2026-10-09
 
 Swap the Perplexity decider to the new checkpoint: **v1 retired, v1.1 replaces it.**

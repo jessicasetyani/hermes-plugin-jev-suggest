@@ -18,6 +18,7 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import json
+import os
 import random
 import sys
 import time
@@ -26,7 +27,14 @@ import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
-PLUGIN = Path.home() / ".hermes" / "plugins" / "jev-suggest" / "__init__.py"
+# Default: the INSTALLED copy (what Hermes actually loads and what the live
+# event log belongs to). Override with JEV_SUGGEST_PLUGIN to probe a checkout,
+# e.g. a branch whose allowlist carries slugs the install does not yet have —
+# without the override a checkout-based run silently measures the INSTALL.
+PLUGIN = Path(os.environ.get(
+    "JEV_SUGGEST_PLUGIN",
+    str(Path.home() / ".hermes" / "plugins" / "jev-suggest" / "__init__.py"),
+))
 RAW_DIR = Path(__file__).resolve().parent.parent / "docs" / "calibration" / "raw"
 BASE = "https://openrouter.ai/api/alpha/decisions"
 SOLAR = "upstage/solar-decide"
