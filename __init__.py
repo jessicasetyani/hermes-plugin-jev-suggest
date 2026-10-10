@@ -16,7 +16,8 @@ Design notes (ported from jev-skill-router's config pattern, OpenRouter-only):
   gateway. Only the model slug is selectable, from an allowlist:
   upstage/solar-decide | ~typesafe/jev-latest | typesafe/jev-1.13 |
   perplexity/pplx-decider-v1.1-27b | cloudflare/clef-flash | cloudflare/clef |
-  liquid/d1 | liquid/d1-20260930.
+  liquid/d1 | liquid/d1-20260930 | inception/mercury-decide |
+  inception/mercury-decide-20260930.
   Anything else falls back to the default (logged, fail-open).
 - Roster is never modified, system prompt stays byte-stable (prefix caching safe).
 - Fail-open: any error/timeout/missing key returns "" so the turn proceeds.
@@ -55,6 +56,15 @@ ALLOWED_MODELS = frozenset({
     "cloudflare/clef",
     "liquid/d1",
     "liquid/d1-20260930",  # canonical dated slug (guardrail stores this)
+    # --- intake 2026-10-11 (v0.8.0): 6 candidates probed, ONE adopted ---
+    "inception/mercury-decide",
+    "inception/mercury-decide-20260930",  # canonical dated slug
+    # Rejected in the same run (docs/calibration/INTAKE-20261011.md):
+    #   openai/gpt-6-luna-decisions   top-1 25%, work-gate floor 0.010, api_error rows
+    #   cloudflare/clef-omni          top-1 38%, floor 0.068, 2.5e-04/call
+    #   microsoft/microsoft-decision-1 top-1 50%, floor 0.106
+    #   nace-ai/drex-v1.5             top-1 50%, needs gate ~0.20, 2.50s p50
+    #   upstage/solar-decide-flash    26-label Choice cap -> 422 (chunk 25, ~6 calls)
 })
 DEFAULT_MODEL = "~typesafe/jev-latest"
 DEFAULT_BASE_URL = "https://openrouter.ai/api/alpha"
@@ -87,6 +97,15 @@ NEW_DECISION_MODELS = frozenset({
     "cloudflare/clef",
     "liquid/d1",
     "liquid/d1-20260930",  # canonical dated slug (guardrail stores this)
+    # --- intake 2026-10-11 (v0.8.0): 6 candidates probed, ONE adopted ---
+    "inception/mercury-decide",
+    "inception/mercury-decide-20260930",  # canonical dated slug
+    # Rejected in the same run (docs/calibration/INTAKE-20261011.md):
+    #   openai/gpt-6-luna-decisions   top-1 25%, work-gate floor 0.010, api_error rows
+    #   cloudflare/clef-omni          top-1 38%, floor 0.068, 2.5e-04/call
+    #   microsoft/microsoft-decision-1 top-1 50%, floor 0.106
+    #   nace-ai/drex-v1.5             top-1 50%, needs gate ~0.20, 2.50s p50
+    #   upstage/solar-decide-flash    26-label Choice cap -> 422 (chunk 25, ~6 calls)
 })
 DEFAULT_CHUNK = 240
 MAX_CHOICES = 255  # the API refuses a Choice with more options
