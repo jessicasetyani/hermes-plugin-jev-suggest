@@ -105,6 +105,7 @@ Full key list with defaults (`plugin.yaml` `config_schema` is authoritative):
 | `min_interval_s` | `0.25` | Minimum gap between outgoing calls, per process |
 | `cache_seconds` | `300` | Identical calls answered from cache per window |
 | `openrouter_model` | `~typesafe/jev-latest` | Allowlist: `upstage/solar-decide` / `~typesafe/jev-latest` / `typesafe/jev-1.13` / `perplexity/pplx-decider-v1.1-27b` / `cloudflare/clef-flash` / `cloudflare/clef` / `liquid/d1` |
+| `fallback_model` | *(empty)* | Second allowlisted decider tried **once** when the primary call fails (superseded slug, provider outage). Empty = fail open as before. The event log attributes the row to the model that actually answered (`failovers` count included). Rate-limit storms are not failed over — the endpoint-wide breaker already silences them. |
 | `openrouter_base_url` | `https://openrouter.ai/api/alpha` | Base URL (endpoint = base + `/decisions`) |
 | `log_enabled` | `true` | Write the event log at all (`false` = plugin runs, nothing recorded) |
 | `log_max_bytes` | `5242880` | Rotate the event log at this size; `0` = never rotate |
@@ -117,7 +118,8 @@ Env fallback (backward compat; config.yaml wins when a ctx is bound):
 `JEV_SUGGEST_MAX_STATE`, `JEV_SUGGEST_MAX_SKILLS`, `JEV_SUGGEST_CHUNK`,
 `JEV_SUGGEST_RETRY_MAX_WAIT`, `JEV_SUGGEST_BREAKER_THRESHOLD`,
 `JEV_SUGGEST_BREAKER_COOLDOWN`, `JEV_SUGGEST_MIN_INTERVAL`,
-`JEV_SUGGEST_CACHE_SECONDS`, `JEV_SUGGEST_MODE`, `JEV_SUGGEST_ENDPOINT`.
+`JEV_SUGGEST_CACHE_SECONDS`, `JEV_SUGGEST_MODE`, `JEV_SUGGEST_ENDPOINT`,
+`JEV_SUGGEST_FALLBACK_MODEL`.
 
 Requires `OPENROUTER_API_KEY` in env (injected by Bitwarden Secrets Manager at
 Hermes runtime) or the Hermes credential pool. Missing key / timeout / error →

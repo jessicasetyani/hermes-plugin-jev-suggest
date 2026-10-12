@@ -3,6 +3,33 @@
 All notable changes to this plugin. Version bumps follow: **behaviour change → minor**,
 **doc/comment only → no bump**, **breaking config/schema change → major**.
 
+## 0.9.0 — 2026-10-12
+
+**Failover on `api_error` — closes the Oct 9 incident class.** Motivation from the
+event log (2026-09-27 → 10-12): 107 `api_error` turns, 100 of them the retired
+`pplx-decider-v1-27b` slug failing silently for ~2 days.
+
+- **New config key `fallback_model`** (default empty = behaviour unchanged): when the
+  primary Decisions call fails (non-cacheable transport/HTTP error), the same state and
+  questions are retried **once** against a second allowlisted slug. The allowlist gate
+  applies to the fallback too; a fallback equal to the primary is ignored. Rate-limit
+  storms are deliberately *not* failed over — the endpoint-wide breaker already owns
+  429/529.
+- **Cache correctness fix found by test 9e:** the response-cache lookup key was derived
+  from the configured primary only, so an answer that a previous turn obtained via
+  failover could never be served from cache (every turn paid the failure again). Lookup
+  now tries the primary key first, then the fallback key; storage keys use the model
+  that actually answered.
+- **Event log:** new `failovers` counter per row, and `model` now records the slug that
+  actually answered (including cache-served failover answers).
+- **Laptop config (applied via `hermes config set`, verified by read-back):**
+  `timeout_s` 4.0 → 6.0 — v1.1's p95 is 4.07s, so the previous setting failed open on
+  the slow tail — and `fallback_model: typesafe/jev-1.13`. Note for failover turns:
+  Jev's gate scale sits far above v1.1's, so a failed-over turn is biased toward
+  speaking, not silence (fail-noisy beats fail-blind).
+- Offline suite extended to 62 checks (failover success, no-fallback, fallback==primary,
+  cache under failover). All pass.
+
 ## 0.8.0 — 2026-10-11
 
 **New-decider intake: 6 probed, 1 adopted — `inception/mercury-decide`.**

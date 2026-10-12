@@ -156,7 +156,10 @@ _ROSTER_MTIME: float = 0.0
 
 # Per-run observability (read by on_pre_llm_call after suggest_skill returns).
 _LAST_INFO: dict = {}
-_RUN: dict = {"cost": 0.0, "calls": 0}
+_RUN: dict = {"cost": 0.0, "calls": 0, "failovers": 0}
+# Model that actually answered the last _decide call (None until one did);
+# lets the event log attribute the row to the failover model when used.
+_LAST_MODEL_USED: str | None = None
 # session_id -> {"skill": winner, "turn_id": ...}; lets skill_tool events carry
 # `suggested`/`matched` so acceptance is exact rather than inferred.
 _SUGGEST_BY_SESSION: dict[str, dict] = {}
@@ -298,6 +301,7 @@ def _settings(ctx=None) -> dict:
             "min_interval_s": float(os.environ.get("JEV_SUGGEST_MIN_INTERVAL", "0.25")),
             "cache_seconds": int(os.environ.get("JEV_SUGGEST_CACHE_SECONDS", "300")),
             "openrouter_model": os.environ.get("JEV_SUGGEST_MODEL", DEFAULT_MODEL),
+            "fallback_model": os.environ.get("JEV_SUGGEST_FALLBACK_MODEL", ""),
             "openrouter_base_url": os.environ.get(
                 "JEV_SUGGEST_ENDPOINT", DEFAULT_BASE_URL + "/decisions"
             ),
@@ -327,6 +331,7 @@ def _settings(ctx=None) -> dict:
         "openrouter_model": str(
             _from_ctx(ctx, "openrouter_model", DEFAULT_MODEL) or DEFAULT_MODEL
         ).strip(),
+        "fallback_model": str(_from_ctx(ctx, "fallback_model", "") or "").strip(),
         "openrouter_base_url": str(
             _from_ctx(ctx, "openrouter_base_url", DEFAULT_BASE_URL) or DEFAULT_BASE_URL
         ).strip(),
@@ -535,6 +540,14 @@ def _decide(state: str, questions: dict, settings: dict) -> dict | None:
         return None
     _RUN["calls"] += 1
     model = _resolve_model(str(settings.get("openrouter_model", DEFAULT_MODEL)))
+    # Resolve the fallback up front: the cache must be able to serve an
+    # answer that a previous turn got via failover (stored under the
+    # fallback slug), not only one from the primary.
+    fb_raw = str(settings.get("fallback_model", "") or "").strip()
+    fallback = _resolve_model(fb_raw) if fb_raw else ""
+    if fallback == model:
+        fallback = ""
+    global _LAST_MODEL_USED
     url = _endpoint(str(settings.get("openrouter_base_url", DEFAULT_BASE_URL)))
     if _breaker_open(url, settings):
         logger.debug("jev-suggest: breaker open for %s; skipping", url)
@@ -546,26 +559,57 @@ def _decide(state: str, questions: dict, settings: dict) -> dict | None:
     cache_seconds = int(settings.get("cache_seconds", 300) or 0)
     cache_key = ""
     if cache_seconds > 0:
-        cache_key = hashlib.sha256(
-            json.dumps([model, state, questions],
-                       sort_keys=True, ensure_ascii=False, default=str).encode()
-        ).hexdigest()
-        hit = _RESP_CACHE.get(cache_key)
-        if hit and hit[0] > time.time():
-            return hit[1]
-    data = _post_json(url, body, {
+        def _ckey(m: str) -> str:
+            return hashlib.sha256(
+                json.dumps([m, state, questions],
+                           sort_keys=True, ensure_ascii=False,
+                           default=str).encode()
+            ).hexdigest()
+        cache_key = _ckey(model)
+        fb_key = _ckey(fallback) if fallback else ""
+        for key in (cache_key, fb_key):  # primary first, then failover copy
+            hit = _RESP_CACHE.get(key)
+            if hit and hit[0] > time.time():
+                _LAST_MODEL_USED = model if key == cache_key else fallback
+                return hit[1]
+    headers = {
         "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json",
-    }, settings)
+    }
+    _LAST_MODEL_USED = None
+    data = _post_json(url, body, headers, settings)
+    if data is None:
+        # Failover: a transport/HTTP failure of the primary model (superseded
+        # slug, provider outage) should not cost the turn when another
+        # allowlisted decider is configured. Rate-limit failures are excluded
+        # in practice: the breaker is endpoint-wide, so 429/529 storms are
+        # already silenced before a fallback could help.
+        if fallback:
+            fb_body = json.dumps({"model": fallback, "state": state,
+                                  "questions": questions}).encode()
+            if len(fb_body) <= MAX_PAYLOAD_BYTES:
+                logger.info("jev-suggest: primary %s failed; failing over to %s",
+                            model, fallback)
+                _RUN["failovers"] += 1
+                model = fallback
+                body = fb_body
+                data = _post_json(url, body, headers, settings)
     if data is None:
         return None
     if not isinstance(data, dict):
         return None
+    _LAST_MODEL_USED = model
     try:
         _RUN["cost"] += float(((data.get("usage") or {}).get("cost")) or 0.0)
     except (TypeError, ValueError):
         pass
     if cache_seconds > 0:
+        # Recompute the key with the model that actually answered, so a
+        # failover answer is cached (and later reused) under the right slug.
+        cache_key = hashlib.sha256(
+            json.dumps([model, state, questions],
+                       sort_keys=True, ensure_ascii=False, default=str).encode()
+        ).hexdigest()
         _RESP_CACHE[cache_key] = (time.time() + cache_seconds, data)
         if len(_RESP_CACHE) > CACHE_MAX_ENTRIES:
             _RESP_CACHE.pop(next(iter(_RESP_CACHE)))  # oldest-inserted first
@@ -823,7 +867,9 @@ def _log_suggest(settings: dict, kwargs: dict, dt: float, text: str,
             "event": "suggest",
             "origin": origin,
             "mode": str(settings.get("mode", "?")),
-            "model": _resolve_model(str(settings.get("openrouter_model", DEFAULT_MODEL))),
+            "model": (_LAST_MODEL_USED
+                      or _resolve_model(str(settings.get(
+                          "openrouter_model", DEFAULT_MODEL)))),
             "session_id": str(kwargs.get("session_id") or ""),
             "turn_id": str(kwargs.get("turn_id") or ""),
             "outcome": _LAST_INFO.get("outcome"),
@@ -835,6 +881,7 @@ def _log_suggest(settings: dict, kwargs: dict, dt: float, text: str,
             "fit": _LAST_INFO.get("fit"),
             "top": _LAST_INFO.get("top"),
             "calls": _RUN.get("calls", 0),
+            "failovers": _RUN.get("failovers", 0),
             "chunks": _LAST_INFO.get("chunks"),
             "latency_s": round(dt, 2),
             "cost": round(_RUN.get("cost", 0.0), 8),

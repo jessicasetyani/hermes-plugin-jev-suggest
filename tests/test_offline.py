@@ -238,6 +238,88 @@ out = m._decide(big, {"q": {"type": "noul", "instructions": "x?",
                             "criteria": {"true": "y", "false": "n"}}}, base_settings(cache_seconds=0))
 check("oversize payload fails open unsent", out is None and not t4_calls)
 
+# 9b. failover: primary fails (429 with too-long Retry-After -> None),
+#     fallback model answers. Requires real _decide with stubbed transport.
+m._decide = _real_decide
+m._BREAKER.clear()
+m._RESP_CACHE.clear()
+m._PACE_LAST.clear()
+m._RUN = {"cost": 0.0, "calls": 0, "failovers": 0}
+m._LAST_MODEL_USED = None
+fo_calls = []
+
+
+def _primary_fails_fallback_ok(url, timeout=None):
+    import io
+    import json as _j
+    fo_calls.append(url)
+    if len(fo_calls) == 1:
+        msg = Message()
+        msg["retry-after"] = "99"  # too long -> single retry refused -> None
+        raise urllib.error.HTTPError(url, 429, "Too Many Requests", msg, None)
+
+    class _R:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            return False
+
+        def read(self):
+            return _j.dumps({
+                "answers": {"q": {"type": "noul", "noul": 0.7}},
+                "usage": {}}).encode()
+    return _R()
+
+
+m._urlopen = _primary_fails_fallback_ok
+m._openrouter_key = lambda **kw: "test-key"
+qf = {"q": {"type": "noul", "instructions": "x?",
+            "criteria": {"true": "y", "false": "n"}}}
+out = m._decide("some state", qf, base_settings(
+    openrouter_model="typesafe/jev-1.13",
+    fallback_model="~typesafe/jev-latest"))
+check("failover returns fallback answer", out is not None and
+      out.get("answers", {}).get("q", {}).get("noul") == 0.7)
+check("failover counted once", m._RUN.get("failovers") == 1)
+check("failover model recorded", m._LAST_MODEL_USED == "~typesafe/jev-latest")
+check("failover made 2 transport calls", len(fo_calls) == 2)
+
+# 9c. no fallback configured: single failure stays a single failure
+m._BREAKER.clear()
+m._RESP_CACHE.clear()
+m._RUN = {"cost": 0.0, "calls": 0, "failovers": 0}
+fo_calls.clear()
+m._LAST_MODEL_USED = None
+out = m._decide("some state", qf, base_settings(openrouter_model="typesafe/jev-1.13"))
+check("no fallback -> fail open after 1 call",
+      out is None and len(fo_calls) == 1 and m._LAST_MODEL_USED is None)
+
+# 9d. fallback equal to primary: no second attempt
+m._BREAKER.clear()
+m._RESP_CACHE.clear()
+m._RUN = {"cost": 0.0, "calls": 0, "failovers": 0}
+fo_calls.clear()
+out = m._decide("some state", qf, base_settings(
+    openrouter_model="typesafe/jev-1.13",
+    fallback_model="typesafe/jev-1.13"))
+check("fallback==primary -> no extra call",
+      out is None and len(fo_calls) == 1 and m._RUN.get("failovers") == 0)
+
+# 9e. failover answer is cached under the fallback model's key
+m._BREAKER.clear()
+m._RESP_CACHE.clear()
+m._PACE_LAST.clear()
+m._RUN = {"cost": 0.0, "calls": 0, "failovers": 0}
+fo_calls.clear()
+m._LAST_MODEL_USED = None
+fct = base_settings(openrouter_model="typesafe/jev-1.13",
+                    fallback_model="~typesafe/jev-latest", cache_seconds=300)
+out = m._decide("cache me", qf, fct)
+out2 = m._decide("cache me", qf, fct)
+check("failover answer cached for repeat call",
+      out is not None and out2 is not None and len(fo_calls) == 2)
+
 # 10. outcome taxonomy (unified schema)
 m._decide = _real_decide
 m._BREAKER.clear()
