@@ -360,10 +360,24 @@ def _endpoint(base_url: str) -> str:
 
 
 def _openrouter_key(*, select: bool = False) -> str:
-    """OPENROUTER_API_KEY from env, else Hermes credential pool (auth.json)."""
-    key = os.environ.get("OPENROUTER_API_KEY", "").strip()
-    if key:
-        return key
+    """OPENROUTER_API_KEY via Hermes's credential routes only.
+
+    Order: agent.secret_scope (profile-aware, the catalog-sanctioned route),
+    then the credential pool API, then the declared env var. Never reads
+    auth.json or any credential file directly (catalog rule 11).
+    """
+    try:
+        from agent.secret_scope import get_secret  # type: ignore
+    except (ImportError, ModuleNotFoundError):
+        get_secret = None
+    if get_secret is not None:
+        try:
+            key = str(get_secret("OPENROUTER_API_KEY", "") or "").strip()
+        except Exception as exc:
+            logger.debug("jev-suggest: secret_scope unavailable: %s", exc)
+            key = ""
+        if key:
+            return key
     try:
         from agent.credential_pool import load_pool  # type: ignore
     except (ImportError, ModuleNotFoundError):
@@ -377,15 +391,8 @@ def _openrouter_key(*, select: bool = False) -> str:
         except Exception as exc:
             logger.debug("jev-suggest: credential pool unavailable: %s", exc)
         return ""
-    try:
-        data = json.loads((_hermes_home() / "auth.json").read_text())
-    except (OSError, ValueError, TypeError):
-        return ""
-    for item in (data.get("credential_pool", {}) or {}).get("openrouter", []) or []:
-        token = str((item or {}).get("access_token") or "").strip()
-        if token:
-            return token
-    return ""
+    # Declared in requires_env; honored by Hermes's env injection.
+    return os.environ.get("OPENROUTER_API_KEY", "").strip()
 
 
 def _read_frontmatter_description(skill_md: Path) -> str:

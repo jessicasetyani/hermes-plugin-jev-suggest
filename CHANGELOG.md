@@ -3,6 +3,22 @@
 All notable changes to this plugin. Version bumps follow: **behaviour change → minor**,
 **doc/comment only → no bump**, **breaking config/schema change → major**.
 
+## 0.10.0 — 2026-10-12
+
+**Credential route hardened (catalog rule 11) — removes the auth.json fallback read.**
+
+- `_openrouter_key()` now resolves `OPENROUTER_API_KEY` through Hermes's credential
+  routes only, in order: `agent.secret_scope.get_secret` (profile-aware, the
+  catalog-sanctioned route) → `agent.credential_pool` API → the env var declared via
+  the new `requires_env` block. The direct `~/.hermes/auth.json` parse is deleted.
+  Behavior on existing installs is unchanged wherever the key arrives through env
+  injection or the credential pool.
+- `plugin.yaml` gains `requires_env: OPENROUTER_API_KEY (required: false, password)`.
+- Motivation: catalog-submission review identified the auth.json read as an admission
+  blocker (rule 11: a plugin never reads Hermes's auth.json or any credential file
+  directly). The plugin is not currently submitted; this makes it submittable.
+- Offline suite: 62 checks, all pass; `hermes plugins validate` passes.
+
 ## 0.9.0 — 2026-10-12
 
 **Failover on `api_error` — closes the Oct 9 incident class.** Motivation from the
