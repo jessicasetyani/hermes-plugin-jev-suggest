@@ -3,6 +3,18 @@
 All notable changes to this plugin. Version bumps follow: **behaviour change → minor**,
 **doc/comment only → no bump**, **breaking config/schema change → major**.
 
+## 0.10.1 — 2026-10-15
+
+- Add `~perplexity/pplx-decider-latest` (pplx router alias -> latest pplx decider)
+  to `ALLOWED_MODELS` and `NEW_DECISION_MODELS`; verified live on
+  `/api/alpha/decisions` (3/3 OK, 0.8-1.2 s p50, $0 billed). Also included in the
+  pplx calibration guardrail-note branch.
+- Live-log incident (this release's motivation): the `-27b-latest` alias slug
+  briefly used in laptop config on 13 Oct is NOT a valid model ID — on 15 Oct it
+  returned 400 on every call and 73 of 130 events silently failed over to
+  `typesafe/jev-1.13` (correct fail-open behavior, wrong primary). Lesson:
+  verify an alias slug live before pointing production config at it.
+
 ## 0.10.0 — 2026-10-12
 
 **Credential route hardened (catalog rule 11) — removes the auth.json fallback read.**

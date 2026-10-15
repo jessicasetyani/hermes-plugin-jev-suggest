@@ -15,7 +15,8 @@ Design notes (ported from jev-skill-router's config pattern, OpenRouter-only):
 - Backend is LOCKED to OpenRouter Decisions API. No TypeSafe-direct, no
   gateway. Only the model slug is selectable, from an allowlist:
   upstage/solar-decide | ~typesafe/jev-latest | typesafe/jev-1.13 |
-  perplexity/pplx-decider-v1.1-27b | cloudflare/clef-flash | cloudflare/clef |
+  perplexity/pplx-decider-v1.1-27b | ~perplexity/pplx-decider-latest (router
+  alias -> latest pplx decider) | cloudflare/clef-flash | cloudflare/clef |
   liquid/d1 | liquid/d1-20260930 | inception/mercury-decide |
   inception/mercury-decide-20260930.
   Anything else falls back to the default (logged, fail-open).
@@ -51,6 +52,7 @@ ALLOWED_MODELS = frozenset({
     "~typesafe/jev-latest",
     "typesafe/jev-1.13",
     "perplexity/pplx-decider-v1.1-27b",
+    "~perplexity/pplx-decider-latest",  # router alias -> latest pplx decider (verified live 2026-10-15)
     "perplexity/pplx-decider-v1.1-27b-20261006",  # canonical dated slug (guardrail stores this)
     "cloudflare/clef-flash",
     "cloudflare/clef",
@@ -92,6 +94,7 @@ SOLAR_MAX_CHOICES = 25
 # (both separate like Jev), untuned for clef-flash (needs ~0.15).
 NEW_DECISION_MODELS = frozenset({
     "perplexity/pplx-decider-v1.1-27b",
+    "~perplexity/pplx-decider-latest",  # router alias -> latest pplx decider (verified live 2026-10-15)
     "perplexity/pplx-decider-v1.1-27b-20261006",  # canonical dated slug (guardrail stores this)
     "cloudflare/clef-flash",
     "cloudflare/clef",
@@ -1048,6 +1051,7 @@ def _solar_config_warning(model: str, settings: dict) -> str | None:
                     f"gate {gate:.2f} above ~0.15 silences real work. Use gate 0.10-0.15; "
                     "top-1 4/8 — not recommended.")
         if model in ("perplexity/pplx-decider-v1.1-27b",
+                     "~perplexity/pplx-decider-latest",
                      "perplexity/pplx-decider-v1.1-27b-20261006"):
             return (f"{model} calibrated 2026-10-09 (N=148, same-session vs Jev: top-1 6/8 "
                     f"= Jev 6/8, recall 7/8 = Jev 7/8 — no accuracy edge over Jev). "
